@@ -1,0 +1,35 @@
+.sample{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: auto;
+}
+
+.sample button {
+	text-align: center;
+	padding: 0;
+}
+
+.sample .led {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: rgb(213, 213, 213);
+	margin-bottom: 4px;
+}
+
+.sample .led.active {
+	background-color: red
+}
+
+.sample input {
+	display: none;
+	opacity: 0;
+	background-color: red;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	position: absolute;
+}
