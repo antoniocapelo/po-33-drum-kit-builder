@@ -5,6 +5,7 @@ import { Sampler, ToneAudioBuffer } from "tone";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useSamplerStore } from "../../stores/samplers-store";
 import "./Sample.css";
+import { playAllSamples } from "./playAllSamples";
 
 const keyNumberMap: Record<number, string | number> = {
   1: "1",
@@ -63,7 +64,10 @@ export const Sample = ({ number }: { number: number }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const num = keyNumberMap[number];
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  useKeypress(num, (e) => {
+  useKeypress(num, (e: KeyboardEvent) => {
+    if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) {
+      return;
+    }
     // Do something when the user has pressed the Escape key
     if (sampler) {
       buttonRef.current?.focus();
@@ -94,8 +98,7 @@ export const Sample = ({ number }: { number: number }) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (sampler) {
-      console.log(sampler.get());
-      sampler.triggerAttack(["C0", "C1", "C2"]);
+      playAllSamples(sampler);
     } else {
       inputRef.current?.click();
     }

@@ -8,7 +8,6 @@ export const Droppable: FC<PropsWithChildren> = ({ children }) => {
   const style = {
     background: isOver ? "green" : undefined,
   };
-  // console.log({ isOver });
 
   return (
     <div ref={setNodeRef} style={style}>

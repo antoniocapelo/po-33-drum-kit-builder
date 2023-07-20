@@ -8,15 +8,15 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Player, Sampler, ToneAudioBuffer, loaded } from "tone";
+import { Sampler, ToneAudioBuffer } from "tone";
+import { MidiNote } from "tone/build/esm/core/type/NoteUnits";
 import "./App.css";
-import { Droppable } from "./components/Droppable/Droppable";
 import { Sample } from "./components/Sample/Sample";
 import { useSamplerStore } from "./stores/samplers-store";
-import { MidiNote } from "tone/build/esm/core/type/NoteUnits";
 
 function App() {
   const setSampler = useSamplerStore((state) => state.addSampler);
+  const playAll = useSamplerStore((state) => state.playAll);
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
@@ -24,30 +24,19 @@ function App() {
   });
   const sensors = useSensors(pointerSensor);
 
-  const onClick = () => {
-    async function play() {
-      const player = new Player(
-        "https://tonejs.github.io/audio/berklee/gong_1.mp3"
-      ).toDestination();
-      await loaded();
-      player.start();
-    }
-    void play();
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (
       over &&
       over.data.current?.padNumber !== active?.data?.current?.padNumber
     ) {
-      console.log(over.data.current);
-      console.log(active.data.current);
+      // destiny is empty
       if (active.data.current?.sampler && !over.data.current?.sampler) {
         setSampler(
           over.data.current!.padNumber as number,
           active.data.current?.sampler as Sampler
         );
+        // both have samples
       } else if (active.data.current?.sampler && over.data.current?.sampler) {
         const droppable = over.data.current?.sampler as Sampler;
         const dragged = active.data.current.sampler as Sampler;
@@ -61,7 +50,7 @@ function App() {
         ]["_buffers"] as any;
 
         // get next note in destiny
-        let nextNote = destinyBuffers.size + 1;
+        let nextNote = destinyBuffers.size;
 
         // get all origin samples
         originBuffers.forEach((buff) => {
@@ -81,9 +70,7 @@ function App() {
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="func">
         {Array.from(new Array(5)).map((_, idx) => (
-          <button key={idx} style={{ background: "#ddd" }} onClick={onClick}>
-            {idx + 1}
-          </button>
+          <button key={idx} style={{ background: "#ddd" }}></button>
         ))}
       </div>
       <div className="row">
@@ -93,11 +80,17 @@ function App() {
           ))}
         </div>
         <div className="func2">
-          {Array.from(new Array(4)).map((_, idx) => (
-            <button key={idx} style={{ background: "#ddd" }} onClick={onClick}>
-              {idx + 1}
-            </button>
+          {Array.from(new Array(3)).map((_, idx) => (
+            <button key={idx} style={{ background: "#ddd" }}></button>
           ))}
+          <button
+            style={{ background: "#ddd" }}
+            onClick={() => {
+              void playAll();
+            }}
+          >
+            &#8250;
+          </button>
         </div>
       </div>
     </DndContext>
