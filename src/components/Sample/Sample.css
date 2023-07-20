@@ -3,7 +3,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: auto;
+	height: 54px;
+	width: 54px;
 }
 
 .sample button {
@@ -34,4 +35,8 @@
 	left: 0;
 	right: 0;
 	position: absolute;
+}
+
+.draggable {
+	touch-action: manipulation;
 }

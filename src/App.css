@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
 }
 
@@ -48,6 +48,19 @@
   font-size: 12px;
 }
 
+#root button[disabled] {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+body {
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+
 .func {
   display: flex;
   gap: 12px;
@@ -55,22 +68,18 @@
   grid-template-columns: repeat(5, auto);
   grid-template-rows: auto;
   grid-auto-flow: row;
-  align-items: stretch;
 }
 
 .func2 {
-  display: grid;
-  grid-gap: 12px;
-  grid-template-rows: repeat(5, auto);
-  grid-template-columns: auto;
-  grid-auto-flow: row;
-  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap:12px;
 }
 
 .row {
   display: flex;
   flex-direction: row;
-  gap: 8px
+  gap: 12px
 }
 
 .pads {
@@ -79,5 +88,4 @@
   grid-template-columns: repeat(4, auto);
   grid-template-rows: auto;
   grid-auto-flow: row;
-  align-items: stretch;
 }

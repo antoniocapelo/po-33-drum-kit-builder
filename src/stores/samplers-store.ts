@@ -5,6 +5,7 @@ import { playAllSamples } from "../components/Sample/playAllSamples";
 interface SamplersState {
   samplers: Record<number, Sampler>;
   addSampler: (pad: number, sampler: Sampler) => void;
+  removeSampler: (pad: number) => void;
   playAll: () => Promise<void>;
 }
 
@@ -29,5 +30,11 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
         },
       };
     }),
-  removeSampler: ({ pad }: { pad: number }) => set({ [pad]: undefined }),
+  removeSampler: (pad: number) =>
+    set(({ samplers }) => {
+      delete samplers[pad];
+      return {
+        samplers,
+      };
+    }),
 }));

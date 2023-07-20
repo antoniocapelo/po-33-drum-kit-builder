@@ -110,6 +110,7 @@ export const Sample = ({ number }: { number: number }) => {
       <input ref={inputRef} type="file" onChange={handleFileSelected} />
       <div
         ref={setNodeRefDraggable}
+        className="draggable"
         style={
           transform
             ? {

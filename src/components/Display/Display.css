@@ -1,0 +1,13 @@
+.display {
+	margin-bottom: 12px;
+	background-color: #eee;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100px;
+	width: 100%;
+}
+
+.display p {
+	margin: 0;
+}

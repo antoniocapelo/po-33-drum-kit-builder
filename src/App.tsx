@@ -13,9 +13,13 @@ import { MidiNote } from "tone/build/esm/core/type/NoteUnits";
 import "./App.css";
 import { Sample } from "./components/Sample/Sample";
 import { useSamplerStore } from "./stores/samplers-store";
+import { Display } from "./components/Display/Display";
 
 function App() {
+  const all = useSamplerStore((state) => state);
+  console.log(all);
   const setSampler = useSamplerStore((state) => state.addSampler);
+  const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
@@ -30,6 +34,11 @@ function App() {
       over &&
       over.data.current?.padNumber !== active?.data?.current?.padNumber
     ) {
+      // clearing sample
+      if (over.data.current?.display) {
+        removeSampler(active?.data.current?.padNumber as number);
+        return;
+      }
       // destiny is empty
       if (active.data.current?.sampler && !over.data.current?.sampler) {
         setSampler(
@@ -68,6 +77,7 @@ function App() {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <Display />
       <div className="func">
         {Array.from(new Array(5)).map((_, idx) => (
           <button key={idx} style={{ background: "#ddd" }}></button>
@@ -81,7 +91,7 @@ function App() {
         </div>
         <div className="func2">
           {Array.from(new Array(3)).map((_, idx) => (
-            <button key={idx} style={{ background: "#ddd" }}></button>
+            <button disabled key={idx} style={{ background: "#ddd" }}></button>
           ))}
           <button
             style={{ background: "#ddd" }}
