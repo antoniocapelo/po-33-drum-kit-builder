@@ -65,7 +65,6 @@ function App() {
 
         // get all origin samples
         originBuffers.forEach((buff) => {
-          console.log("yo", buff, nextNote);
           droppable.add(`C${nextNote}` as unknown as MidiNote, buff);
           nextNote = nextNote + 1;
         });
@@ -87,9 +86,6 @@ function App() {
           </button>
         ))}
       </div>
-      <Droppable>
-        <div style={{ padding: 40 }}>yo</div>
-      </Droppable>
       <div className="row">
         <div className="pads">
           {Array.from(new Array(16)).map((_, idx) => (
@@ -104,10 +100,6 @@ function App() {
           ))}
         </div>
       </div>
-
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </DndContext>
   );
 }
