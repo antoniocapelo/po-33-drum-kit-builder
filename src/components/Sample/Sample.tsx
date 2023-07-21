@@ -1,4 +1,10 @@
-import { DragEvent, DragEventHandler, useRef } from "react";
+import {
+  DragEvent,
+  DragEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useKeypress from "react-use-keypress";
 import { Context, Sampler, ToneAudioBuffer } from "tone";
 
@@ -95,6 +101,7 @@ export const Sample = ({ number }: { number: number }) => {
     if (!fileValue) {
       return;
     }
+
     const file = URL.createObjectURL(fileValue);
     const audioBuffer = new ToneAudioBuffer(file);
     createSamplerFromFile(audioBuffer);
@@ -131,7 +138,14 @@ export const Sample = ({ number }: { number: number }) => {
     <div onDragOver={handleDragEvent} onDrop={handleDragEvent}>
       <div className="sample" ref={setNodeRef} style={style}>
         <div className={sampler ? "led active" : "led"}></div>
-        <input ref={inputRef} type="file" onChange={handleFileSelected} />
+        {!sampler && (
+          <input
+            ref={inputRef}
+            type="file"
+            onChange={handleFileSelected}
+            // value={file}
+          />
+        )}
         <div
           ref={setNodeRefDraggable}
           className="draggable"
