@@ -84,11 +84,6 @@ function App() {
           droppable.add(`C${nextNote}` as unknown as MidiNote, buff);
           nextNote = nextNote + 1;
         });
-        // setSampler(
-
-        //   over.data.current!.padNumber as number,
-        //   active.data.current?.sampler as Sampler
-        // );
       }
     }
   };
@@ -98,7 +93,7 @@ function App() {
       <Display />
       <div className="func">
         {Array.from(new Array(5)).map((_, idx) => (
-          <button key={idx} style={{ background: "#ddd" }}></button>
+          <button key={idx} disabled style={{ background: "#ddd" }}></button>
         ))}
       </div>
       <div className="row">
@@ -117,7 +112,20 @@ function App() {
               void playAll();
             }}
           >
-            &#8250;
+            <svg
+              version="1.1"
+              id="Layer_1"
+              xmlns="http://www.w3.org/2000/svg"
+              y="0px"
+              viewBox="0 0 92.2 122.88"
+              className="play"
+              width="16px"
+              height="16px"
+            >
+              <g>
+                <polygon points="92.2,60.97 0,122.88 0,0 92.2,60.97" />
+              </g>
+            </svg>
           </button>
         </div>
       </div>

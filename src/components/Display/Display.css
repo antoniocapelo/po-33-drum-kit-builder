@@ -2,11 +2,15 @@
 	margin-bottom: 12px;
 	background-color: #eee;
 	display: flex;
+	font-size: 12px;
 	align-items: center;
 	justify-content: center;
 	height: 100px;
 	width: 100%;
 	border-radius: 4px;
+	padding: 1rem;
+	box-sizing: border-box;
+	max-width: 318px;
 }
 
 .display p {

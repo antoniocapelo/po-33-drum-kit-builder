@@ -24,7 +24,15 @@ export const Display = () => {
           <p>Drag on an empty one to copy it</p>
           <p>Drag on another one to merge</p>
         </div>
-      ) : null}
+      ) : (
+        <div>
+          <p>Welcome to PO-33 drum kit util</p>
+          <p>
+            Start adding samples and when you're ready, play them into your
+            PO-33.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
