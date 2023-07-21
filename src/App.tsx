@@ -4,6 +4,7 @@
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -14,6 +15,7 @@ import "./App.css";
 import { Sample } from "./components/Sample/Sample";
 import { useSamplerStore } from "./stores/samplers-store";
 import { Display } from "./components/Display/Display";
+import { DragEvent } from "react";
 
 interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
@@ -52,7 +54,6 @@ function App() {
         >;
         const sampleMapNotes: SamplesMap = {};
 
-        console.log("yop", sampleMap);
         let counter = 0;
         sampleMap.forEach((value) => {
           sampleMapNotes[`C${counter}`] = value;
@@ -60,9 +61,6 @@ function App() {
         });
         const newSampler = new Sampler(sampleMapNotes, () => {
           newSampler.triggerAttack(["C0"]);
-          console.log("donee");
-          console.log(sampleMapNotes, newSampler);
-          console.log("old", originSampler);
           setSampler(over.data.current!.padNumber as number, newSampler);
         }).toDestination();
         // both have samples

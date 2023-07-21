@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { DragEvent, DragEventHandler, useRef } from "react";
 import useKeypress from "react-use-keypress";
-import { Sampler, ToneAudioBuffer } from "tone";
+import { Context, Sampler, ToneAudioBuffer } from "tone";
 
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useSamplerStore } from "../../stores/samplers-store";
@@ -76,13 +76,9 @@ export const Sample = ({ number }: { number: number }) => {
     }
   });
 
-  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const fileValue = e.target.files?.[0];
-    if (!fileValue) {
-      return;
-    }
-    const file = URL.createObjectURL(fileValue);
-    const audioBuffer = new ToneAudioBuffer(file);
+  const createSamplerFromFile = (
+    audioBuffer: AudioBuffer | ToneAudioBuffer
+  ) => {
     const player = new Sampler(
       {
         C0: audioBuffer,
@@ -94,6 +90,16 @@ export const Sample = ({ number }: { number: number }) => {
     ).toDestination();
   };
 
+  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const fileValue = e.target.files?.[0];
+    if (!fileValue) {
+      return;
+    }
+    const file = URL.createObjectURL(fileValue);
+    const audioBuffer = new ToneAudioBuffer(file);
+    createSamplerFromFile(audioBuffer);
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (sampler) {
@@ -103,31 +109,51 @@ export const Sample = ({ number }: { number: number }) => {
     }
   };
 
+  const handleDragEvent = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    // Do something
+    if (!e.dataTransfer.files || e.dataTransfer.files.length === 0) {
+      return;
+    }
+
+    if (e.dataTransfer.files.length === 1) {
+      const file = e.dataTransfer.files[0];
+      void file
+        .arrayBuffer()
+        .then((arrayBuffer) => {
+          const audioContext = new Context();
+          return audioContext.decodeAudioData(arrayBuffer);
+        })
+        .then((file) => createSamplerFromFile(file));
+    }
+  };
   return (
-    <div className="sample" ref={setNodeRef} style={style}>
-      <div className={sampler ? "led active" : "led"}></div>
-      <input ref={inputRef} type="file" onChange={handleFileSelected} />
-      <div
-        ref={setNodeRefDraggable}
-        className="draggable"
-        style={
-          transform
-            ? {
-                transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-                position: "absolute",
-                zIndex: "2",
-                cursor: "move",
-              }
-            : { position: "static" }
-        }
-        {...listeners}
-        {...attributes}
-      >
-        <button ref={buttonRef} onClick={handleClick}>
-          {number}
-        </button>
+    <div onDragOver={handleDragEvent} onDrop={handleDragEvent}>
+      <div className="sample" ref={setNodeRef} style={style}>
+        <div className={sampler ? "led active" : "led"}></div>
+        <input ref={inputRef} type="file" onChange={handleFileSelected} />
+        <div
+          ref={setNodeRefDraggable}
+          className="draggable"
+          style={
+            transform
+              ? {
+                  transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+                  position: "absolute",
+                  zIndex: "2",
+                  cursor: "move",
+                }
+              : { position: "static" }
+          }
+          {...listeners}
+          {...attributes}
+        >
+          <button ref={buttonRef} onClick={handleClick}>
+            {number}
+          </button>
+        </div>
+        {isDragging && <button>{number}</button>}
       </div>
-      {isDragging && <button>{number}</button>}
     </div>
   );
 };
