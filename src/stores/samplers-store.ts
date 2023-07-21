@@ -15,9 +15,12 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   samplers: {},
   playAll: async () => {
     const samplers = get().samplers;
-    for (let index = 1; index <= Object.values(samplers).length; index++) {
-      const element = samplers[index];
-      playAllSamples(element);
+
+    const keys = Object.keys(samplers);
+
+    for (let index = 0; index < keys.length; index++) {
+      const element = keys[index];
+      playAllSamples(samplers[+element]);
       await timer(350);
     }
   },

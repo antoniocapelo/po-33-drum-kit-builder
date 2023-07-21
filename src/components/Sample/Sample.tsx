@@ -59,7 +59,6 @@ export const Sample = ({ number }: { number: number }) => {
     },
   });
 
-  // const [sampler, setSampler] = useState<Sampler | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const num = keyNumberMap[number];

@@ -15,9 +15,12 @@ import { Sample } from "./components/Sample/Sample";
 import { useSamplerStore } from "./stores/samplers-store";
 import { Display } from "./components/Display/Display";
 
+interface SamplesMap {
+  [note: string]: ToneAudioBuffer | AudioBuffer | string;
+  [midi: number]: ToneAudioBuffer | AudioBuffer | string;
+}
+
 function App() {
-  const all = useSamplerStore((state) => state);
-  console.log(all);
   const setSampler = useSamplerStore((state) => state.addSampler);
   const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
@@ -41,10 +44,27 @@ function App() {
       }
       // destiny is empty
       if (active.data.current?.sampler && !over.data.current?.sampler) {
-        setSampler(
-          over.data.current!.padNumber as number,
-          active.data.current?.sampler as Sampler
-        );
+        const originSampler = active.data.current?.sampler as Sampler;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+        const sampleMap = originSampler["_buffers"]["_buffers"] as Map<
+          number,
+          ToneAudioBuffer
+        >;
+        const sampleMapNotes: SamplesMap = {};
+
+        console.log("yop", sampleMap);
+        let counter = 0;
+        sampleMap.forEach((value) => {
+          sampleMapNotes[`C${counter}`] = value;
+          counter++;
+        });
+        const newSampler = new Sampler(sampleMapNotes, () => {
+          newSampler.triggerAttack(["C0"]);
+          console.log("donee");
+          console.log(sampleMapNotes, newSampler);
+          console.log("old", originSampler);
+          setSampler(over.data.current!.padNumber as number, newSampler);
+        }).toDestination();
         // both have samples
       } else if (active.data.current?.sampler && over.data.current?.sampler) {
         const droppable = over.data.current?.sampler as Sampler;
