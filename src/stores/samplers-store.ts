@@ -4,14 +4,18 @@
 import { Frequency, Sampler, ToneAudioBuffer } from "tone";
 import { create } from "zustand";
 import { SamplesMap } from "../App";
-import { playPad } from "../components/Sample/playPad";
+import { playPad as playPadSounds } from "../components/Sample/playPad";
+import { useExperienceState } from "./experience-store";
 
 export interface PadState {
   samplers: Array<Sampler>;
   baseNote: number;
+  baseVolume: number;
+  padNumber: number;
 }
 
 export const DEFAULT_BASE_NOTE = 60;
+export const DEFAULT_BASE_VOL = -6;
 
 interface SamplersState {
   samplers: Record<number, PadState>;
@@ -19,13 +23,18 @@ interface SamplersState {
   copyPad: (from: number, to: number) => void;
   mergePads: (from: number, to: number) => void;
   removeSampler: (pad: number) => void;
+  playPad: (padNumber: number) => void;
   playAll: () => Promise<void>;
+  setVolume: (pad: number, to: number) => void;
 }
 
 const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export const useSamplerStore = create<SamplersState>((set, get) => ({
   samplers: {},
+  playPad: (padNumber) => {
+    playPadSounds(get().samplers[padNumber]);
+  },
   playAll: async () => {
     const samplers = get().samplers;
 
@@ -33,7 +42,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
 
     for (let index = 0; index < keys.length; index++) {
       const element = keys[index];
-      playPad(samplers[+element]);
+      playPadSounds(samplers[+element]);
       await timer(350);
     }
   },
@@ -43,7 +52,9 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     if (fromPad && !toPad) {
       const newState: PadState = {
         samplers: [],
+        baseVolume: fromPad.baseVolume,
         baseNote: fromPad.baseNote,
+        padNumber: to,
       };
       fromPad.samplers.forEach((s) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
@@ -61,6 +72,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
             Frequency(newState.baseNote, "midi").toFrequency(),
           ]);
         }).toDestination();
+        newSampler.volume.value = newState.baseVolume;
         newState.samplers.push(newSampler);
       });
 
@@ -77,7 +89,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   mergePads: (from: number, to: number) => {
     const fromPad = get().samplers[from];
     const toPad = get().samplers[to];
-    debugger;
     if (fromPad && toPad) {
       const newSamplers: Array<Sampler> = [];
       fromPad.samplers.forEach((s) => {
@@ -111,17 +122,19 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
         };
       });
     }
-    playPad(get().samplers[to]);
+    playPadSounds(get().samplers[to]);
   },
-  addSampler: (pad, sampler) =>
+  addSampler: (padNumber, sampler) =>
     set(({ samplers }) => {
-      if (samplers[pad]) {
+      if (samplers[padNumber]) {
         return {
           samplers: {
             ...samplers,
-            [pad]: {
-              samplers: [...samplers[pad].samplers, sampler],
-              baseNote: samplers[pad].baseNote,
+            [padNumber]: {
+              samplers: [...samplers[padNumber].samplers, sampler],
+              baseNote: samplers[padNumber].baseNote,
+              baseVolume: samplers[padNumber].baseVolume,
+              padNumber,
             },
           },
         };
@@ -129,9 +142,11 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
       return {
         samplers: {
           ...samplers,
-          [pad]: {
+          [padNumber]: {
             samplers: [sampler],
             baseNote: DEFAULT_BASE_NOTE,
+            baseVolume: DEFAULT_BASE_VOL,
+            padNumber,
           },
         },
       };
@@ -143,4 +158,21 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
         samplers,
       };
     }),
+  setVolume: (padNumber, to) => {
+    const pad = get().samplers[padNumber];
+    set(({ samplers }) => {
+      return {
+        samplers: {
+          ...samplers,
+          [padNumber]: {
+            ...samplers[padNumber],
+            baseVolume: to,
+          },
+        },
+      };
+    });
+    pad.samplers.forEach((sampler) => {
+      sampler.volume.value = to;
+    });
+  },
 }));

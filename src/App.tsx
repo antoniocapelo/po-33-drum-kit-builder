@@ -8,13 +8,20 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Sampler, ToneAudioBuffer } from "tone";
-import { MidiNote } from "tone/build/esm/core/type/NoteUnits";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+//theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+//core
+import "primereact/resources/primereact.min.css";
+
+import { ToneAudioBuffer } from "tone";
 import "./App.css";
 import { Display } from "./components/Display/Display";
 import { Sample } from "./components/Sample/Sample";
-import { PadState, useSamplerStore } from "./stores/samplers-store";
-import { playPad } from "./components/Sample/playPad";
+import { Knob, VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
+import { useSamplerStore } from "./stores/samplers-store";
+import { useExperienceState } from "./stores/experience-store";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
@@ -26,6 +33,7 @@ function App() {
   const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
   const mergePads = useSamplerStore((state) => state.mergePads);
+  const setCurrentPad = useExperienceState().setCurrentPad;
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
@@ -56,51 +64,60 @@ function App() {
           active.data.current!.padNumber as number,
           over.data.current!.padNumber as number
         );
+        setCurrentPad(over.data.current.padNumber as number);
       }
     }
   };
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <Display />
-      <div className="func">
-        {Array.from(new Array(5)).map((_, idx) => (
-          <button key={idx} disabled style={{ background: "#ddd" }}></button>
-        ))}
-      </div>
-      <div className="row">
-        <div className="pads">
-          {Array.from(new Array(16)).map((_, idx) => (
-            <Sample key={idx} number={idx + 1} />
+      <PrimeReactProvider>
+        <Display />
+        <div className="func">
+          {Array.from(new Array(5)).map((_, idx) => (
+            <button key={idx} disabled style={{ background: "#ddd" }}></button>
           ))}
         </div>
-        <div className="func2">
-          {Array.from(new Array(3)).map((_, idx) => (
-            <button disabled key={idx} style={{ background: "#ddd" }}></button>
-          ))}
-          <button
-            style={{ background: "#ddd" }}
-            onClick={() => {
-              void playAll();
-            }}
-          >
-            <svg
-              version="1.1"
-              id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg"
-              y="0px"
-              viewBox="0 0 92.2 122.88"
-              className="play"
-              width="16px"
-              height="16px"
+        <div className="row">
+          <div className="pads">
+            {Array.from(new Array(16)).map((_, idx) => (
+              <Sample key={idx} number={idx + 1} />
+            ))}
+          </div>
+          <div className="func2">
+            {Array.from(new Array(2)).map((_, idx) => (
+              <button
+                disabled
+                key={idx}
+                style={{ background: "#ddd" }}
+              ></button>
+            ))}
+
+            <VolumeKnob />
+            <button
+              style={{ background: "#ddd" }}
+              onClick={() => {
+                void playAll();
+              }}
             >
-              <g>
-                <polygon points="92.2,60.97 0,122.88 0,0 92.2,60.97" />
-              </g>
-            </svg>
-          </button>
+              <svg
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                y="0px"
+                viewBox="0 0 92.2 122.88"
+                className="play"
+                width="16px"
+                height="16px"
+              >
+                <g>
+                  <polygon points="92.2,60.97 0,122.88 0,0 92.2,60.97" />
+                </g>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
+      </PrimeReactProvider>
     </DndContext>
   );
 }

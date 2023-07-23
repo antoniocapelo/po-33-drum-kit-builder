@@ -5,11 +5,12 @@ import { Context, Frequency, Midi, Sampler, ToneAudioBuffer } from "tone";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import {
   DEFAULT_BASE_NOTE,
+  DEFAULT_BASE_VOL,
   PadState,
   useSamplerStore,
 } from "../../stores/samplers-store";
 import "./Sample.css";
-import { playPad } from "./playPad";
+import { useExperienceState } from "../../stores/experience-store";
 
 const keyNumberMap: Record<number, string | number> = {
   1: "1",
@@ -36,6 +37,8 @@ export const Sample = ({ number }: { number: number }) => {
     (state: { samplers: Record<number, PadState> }) => state.samplers[number]
   );
   const setSampler = useSamplerStore((state) => state.addSampler);
+  const playPad = useSamplerStore((state) => state.playPad);
+  const setCurrentPad = useExperienceState().setCurrentPad;
 
   const { isOver, setNodeRef } = useDroppable({
     id: `droppable-${number}`,
@@ -88,13 +91,14 @@ export const Sample = ({ number }: { number: number }) => {
         [DEFAULT_BASE_NOTE]: audioBuffer,
       },
       () => {
-        console.log(player);
         player.triggerAttack([
           Frequency(DEFAULT_BASE_NOTE, "midi").toFrequency(),
         ]);
         setSampler(number, player);
       }
     ).toDestination();
+    player.volume.value = DEFAULT_BASE_VOL;
+    setCurrentPad(number);
   };
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -111,7 +115,8 @@ export const Sample = ({ number }: { number: number }) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (pad) {
-      playPad(pad);
+      playPad(pad.padNumber);
+      setCurrentPad(pad.padNumber);
     } else {
       inputRef.current?.click();
     }
