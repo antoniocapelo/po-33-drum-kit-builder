@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Frequency, Sampler, ToneAudioBuffer } from "tone";
+import { Frequency, Recorder, Sampler, ToneAudioBuffer } from "tone";
 import { create } from "zustand";
 import { SamplesMap } from "../App";
 import { playPad as playPadSounds } from "../components/Sample/playPad";
-import { useExperienceState } from "./experience-store";
+import kick from "./../assets/kick.wav";
+import rim from "./../assets/rim.wav";
+import hat from "./../assets/hat.wav";
 
 export interface PadState {
   samplers: Array<Sampler>;
@@ -30,8 +32,24 @@ interface SamplersState {
 
 const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
+const initialSamples = [kick, hat, rim];
+const initialSamplers: Record<number, PadState> = {};
+initialSamples.forEach((sample, idx) => {
+  const padNumber = idx + 1;
+  const player = new Sampler({
+    [DEFAULT_BASE_NOTE]: sample,
+  }).toDestination();
+
+  initialSamplers[padNumber] = {
+    padNumber: padNumber,
+    baseNote: DEFAULT_BASE_NOTE,
+    baseVolume: DEFAULT_BASE_VOL,
+    samplers: [player],
+  };
+});
+
 export const useSamplerStore = create<SamplersState>((set, get) => ({
-  samplers: {},
+  samplers: initialSamplers,
   playPad: (padNumber) => {
     playPadSounds(get().samplers[padNumber]);
   },

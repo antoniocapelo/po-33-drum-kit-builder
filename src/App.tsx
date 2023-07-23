@@ -8,7 +8,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import { PrimeReactProvider } from "primereact/api";
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 
@@ -19,9 +19,9 @@ import { ToneAudioBuffer } from "tone";
 import "./App.css";
 import { Display } from "./components/Display/Display";
 import { Sample } from "./components/Sample/Sample";
-import { Knob, VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
-import { useSamplerStore } from "./stores/samplers-store";
+import { VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
 import { useExperienceState } from "./stores/experience-store";
+import { useSamplerStore } from "./stores/samplers-store";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;

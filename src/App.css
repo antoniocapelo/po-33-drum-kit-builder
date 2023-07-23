@@ -71,7 +71,7 @@ body {
 .func {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   grid-template-columns: repeat(5, auto);
   grid-template-rows: auto;
   grid-auto-flow: row;
