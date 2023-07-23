@@ -8,7 +8,6 @@ export const VolumeKnob = () => {
   const currentPadState = useSamplerStore().samplers[currentPad as number];
   const val = currentPadState ? currentPadState.baseVolume : 0;
 
-  console.log({ val });
   return (
     <Knob
       value={val}

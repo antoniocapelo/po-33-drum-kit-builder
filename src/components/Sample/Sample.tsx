@@ -1,4 +1,4 @@
-import { DragEvent, useRef } from "react";
+import { DragEvent, useRef, useState } from "react";
 import useKeypress from "react-use-keypress";
 import { Context, Frequency, Midi, Sampler, ToneAudioBuffer } from "tone";
 
@@ -36,6 +36,7 @@ export const Sample = ({ number }: { number: number }) => {
   const pad = useSamplerStore(
     (state: { samplers: Record<number, PadState> }) => state.samplers[number]
   );
+  const [showFileDragStyle, setFileDragStyle] = useState(false);
   const setSampler = useSamplerStore((state) => state.addSampler);
   const playPad = useSamplerStore((state) => state.playPad);
   const setCurrentPad = useExperienceState().setCurrentPad;
@@ -139,9 +140,31 @@ export const Sample = ({ number }: { number: number }) => {
         })
         .then((file) => createSamplerFromFile(file));
     }
+    setFileDragStyle(false);
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    handleDragEvent(e);
+    setFileDragStyle(true);
+  };
+  const hideFileDragStyle = () => {
+    setFileDragStyle(false);
   };
   return (
-    <div onDragOver={handleDragEvent} onDrop={handleDragEvent}>
+    <div
+      onDragOver={handleDragOver}
+      onDrop={handleDragEvent}
+      onDragLeave={hideFileDragStyle}
+      onDragExit={hideFileDragStyle}
+      style={
+        showFileDragStyle
+          ? {
+              opacity: 0.5,
+              background: "#ddd",
+            }
+          : {}
+      }
+    >
       <div className="sample" ref={setNodeRef} style={style}>
         <div className={pad ? "led active" : "led"}></div>
         {!pad && (
