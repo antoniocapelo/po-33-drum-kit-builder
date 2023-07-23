@@ -17,6 +17,10 @@ export const VolumeKnob = () => {
           setVolume(currentPad, e.value);
         }
       }}
+      size={54}
+      valueColor="#444"
+      rangeColor="#ddd"
+      valueTemplate={"Vol"}
       min={-40}
       max={20}
     />

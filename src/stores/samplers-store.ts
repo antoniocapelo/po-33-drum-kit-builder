@@ -107,6 +107,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
             Frequency(toPad.baseNote, "midi").toFrequency(),
           ]);
         }).toDestination();
+        newSampler.volume.value = s.volume.value;
         newSamplers.push(newSampler);
       });
 
@@ -158,21 +159,23 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
         samplers,
       };
     }),
-  setVolume: (padNumber, to) => {
+  setVolume: (padNumber, newValue) => {
     const pad = get().samplers[padNumber];
+    const diff = pad.baseVolume - newValue;
+    console.log(diff);
     set(({ samplers }) => {
       return {
         samplers: {
           ...samplers,
           [padNumber]: {
             ...samplers[padNumber],
-            baseVolume: to,
+            baseVolume: newValue,
           },
         },
       };
     });
     pad.samplers.forEach((sampler) => {
-      sampler.volume.value = to;
+      sampler.volume.value = sampler.volume.value - diff;
     });
   },
 }));
