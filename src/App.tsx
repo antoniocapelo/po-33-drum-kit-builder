@@ -4,7 +4,6 @@
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -12,20 +11,21 @@ import {
 import { Sampler, ToneAudioBuffer } from "tone";
 import { MidiNote } from "tone/build/esm/core/type/NoteUnits";
 import "./App.css";
-import { Sample } from "./components/Sample/Sample";
-import { useSamplerStore } from "./stores/samplers-store";
 import { Display } from "./components/Display/Display";
-import { DragEvent } from "react";
+import { Sample } from "./components/Sample/Sample";
+import { PadState, useSamplerStore } from "./stores/samplers-store";
+import { playPad } from "./components/Sample/playPad";
 
-interface SamplesMap {
+export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
   [midi: number]: ToneAudioBuffer | AudioBuffer | string;
 }
 
 function App() {
-  const setSampler = useSamplerStore((state) => state.addSampler);
+  const copyPad = useSamplerStore((state) => state.copyPad);
   const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
+  const mergePads = useSamplerStore((state) => state.mergePads);
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
@@ -45,45 +45,17 @@ function App() {
         return;
       }
       // destiny is empty
-      if (active.data.current?.sampler && !over.data.current?.sampler) {
-        const originSampler = active.data.current?.sampler as Sampler;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-        const sampleMap = originSampler["_buffers"]["_buffers"] as Map<
-          number,
-          ToneAudioBuffer
-        >;
-        const sampleMapNotes: SamplesMap = {};
-
-        let counter = 0;
-        sampleMap.forEach((value) => {
-          sampleMapNotes[`C${counter}`] = value;
-          counter++;
-        });
-        const newSampler = new Sampler(sampleMapNotes, () => {
-          newSampler.triggerAttack(["C0"]);
-          setSampler(over.data.current!.padNumber as number, newSampler);
-        }).toDestination();
-        // both have samples
-      } else if (active.data.current?.sampler && over.data.current?.sampler) {
-        const droppable = over.data.current?.sampler as Sampler;
-        const dragged = active.data.current.sampler as Sampler;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const originBuffers: Map<number, ToneAudioBuffer> = dragged["_buffers"][
-          "_buffers"
-        ] as any;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const destinyBuffers: Map<number, ToneAudioBuffer> = dragged[
-          "_buffers"
-        ]["_buffers"] as any;
-
-        // get next note in destiny
-        let nextNote = destinyBuffers.size;
-
-        // get all origin samples
-        originBuffers.forEach((buff) => {
-          droppable.add(`C${nextNote}` as unknown as MidiNote, buff);
-          nextNote = nextNote + 1;
-        });
+      if (active.data.current?.pad && !over.data.current?.pad) {
+        copyPad(
+          active.data.current?.padNumber as number,
+          over.data.current?.padNumber as number
+        );
+      } else if (active.data.current?.pad && over.data.current?.pad) {
+        // merge samples
+        mergePads(
+          active.data.current!.padNumber as number,
+          over.data.current!.padNumber as number
+        );
       }
     }
   };

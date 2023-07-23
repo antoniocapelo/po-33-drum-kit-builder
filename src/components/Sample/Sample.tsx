@@ -1,17 +1,15 @@
-import {
-  DragEvent,
-  DragEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { DragEvent, useRef } from "react";
 import useKeypress from "react-use-keypress";
-import { Context, Sampler, ToneAudioBuffer } from "tone";
+import { Context, Frequency, Midi, Sampler, ToneAudioBuffer } from "tone";
 
 import { useDraggable, useDroppable } from "@dnd-kit/core";
-import { useSamplerStore } from "../../stores/samplers-store";
+import {
+  DEFAULT_BASE_NOTE,
+  PadState,
+  useSamplerStore,
+} from "../../stores/samplers-store";
 import "./Sample.css";
-import { playAllSamples } from "./playAllSamples";
+import { playPad } from "./playPad";
 
 const keyNumberMap: Record<number, string | number> = {
   1: "1",
@@ -34,8 +32,8 @@ const keyNumberMap: Record<number, string | number> = {
 
 export const Sample = ({ number }: { number: number }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const sampler = useSamplerStore(
-    (state: { samplers: Record<number, Sampler> }) => state.samplers[number]
+  const pad = useSamplerStore(
+    (state: { samplers: Record<number, PadState> }) => state.samplers[number]
   );
   const setSampler = useSamplerStore((state) => state.addSampler);
 
@@ -43,7 +41,7 @@ export const Sample = ({ number }: { number: number }) => {
     id: `droppable-${number}`,
     data: {
       padNumber: number,
-      sampler,
+      pad,
     },
   });
   const style = {
@@ -61,7 +59,7 @@ export const Sample = ({ number }: { number: number }) => {
     id: `draggable-${number}`,
     data: {
       padNumber: number,
-      sampler,
+      pad,
     },
   });
 
@@ -74,7 +72,7 @@ export const Sample = ({ number }: { number: number }) => {
       return;
     }
     // Do something when the user has pressed the Escape key
-    if (sampler) {
+    if (pad) {
       buttonRef.current?.focus();
       buttonRef.current?.click();
     } else {
@@ -87,10 +85,13 @@ export const Sample = ({ number }: { number: number }) => {
   ) => {
     const player = new Sampler(
       {
-        C0: audioBuffer,
+        [DEFAULT_BASE_NOTE]: audioBuffer,
       },
       () => {
-        player.triggerAttack(["C0"]);
+        console.log(player);
+        player.triggerAttack([
+          Frequency(DEFAULT_BASE_NOTE, "midi").toFrequency(),
+        ]);
         setSampler(number, player);
       }
     ).toDestination();
@@ -109,8 +110,8 @@ export const Sample = ({ number }: { number: number }) => {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (sampler) {
-      playAllSamples(sampler);
+    if (pad) {
+      playPad(pad);
     } else {
       inputRef.current?.click();
     }
@@ -137,8 +138,8 @@ export const Sample = ({ number }: { number: number }) => {
   return (
     <div onDragOver={handleDragEvent} onDrop={handleDragEvent}>
       <div className="sample" ref={setNodeRef} style={style}>
-        <div className={sampler ? "led active" : "led"}></div>
-        {!sampler && (
+        <div className={pad ? "led active" : "led"}></div>
+        {!pad && (
           <input
             ref={inputRef}
             type="file"
