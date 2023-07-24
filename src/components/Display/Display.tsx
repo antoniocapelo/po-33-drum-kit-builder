@@ -1,7 +1,9 @@
 import { useDndContext, useDroppable } from "@dnd-kit/core";
 import "./Display.css";
+import { useExperienceState } from "../../stores/experience-store";
 export const Display = () => {
   const dndContext = useDndContext();
+  const isExporting = useExperienceState((state) => state.isExporting);
   const { isOver, setNodeRef } = useDroppable({
     id: `droppable-display`,
     data: {
@@ -24,7 +26,8 @@ export const Display = () => {
           <p>Drag on an empty one to copy it</p>
           <p>Drag on another one to merge</p>
         </div>
-      ) : (
+      ) : null}
+      {!isDragging && !isExporting ? (
         <div>
           <p>Welcome to PO-33 drum kit util</p>
           <p>
@@ -32,7 +35,12 @@ export const Display = () => {
             PO-33.
           </p>
         </div>
-      )}
+      ) : null}
+      {isExporting ? (
+        <div>
+          <p>Exporting…</p>
+        </div>
+      ) : null}
     </div>
   );
 };

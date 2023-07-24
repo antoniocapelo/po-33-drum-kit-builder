@@ -20,7 +20,7 @@ export interface PadState {
 }
 
 export const DEFAULT_BASE_NOTE = 60;
-export const DEFAULT_BASE_VOL = -6;
+export const DEFAULT_BASE_VOL = 0;
 
 interface SamplersState {
   samplers: Record<number, PadState>;
@@ -124,7 +124,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const mp3 = await convertWebmToMp3(rec);
-    console.log("done", rec, mp3);
 
     // download the recording by creating an anchor element and blob url
     const url = URL.createObjectURL(mp3);
