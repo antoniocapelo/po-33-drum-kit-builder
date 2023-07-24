@@ -18,11 +18,11 @@ import "primereact/resources/primereact.min.css";
 import { ToneAudioBuffer } from "tone";
 import "./App.css";
 import { Display } from "./components/Display/Display";
+import { PitchKnob } from "./components/PitchKnob/PitchKnob";
 import { Sample } from "./components/Sample/Sample";
 import { VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
 import { useExperienceState } from "./stores/experience-store";
 import { useSamplerStore } from "./stores/samplers-store";
-import { PitchKnob } from "./components/PitchKnob/PitchKnob";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;

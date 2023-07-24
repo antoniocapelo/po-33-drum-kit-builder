@@ -1,4 +1,4 @@
-import { useDndContext, useDndMonitor, useDroppable } from "@dnd-kit/core";
+import { useDndContext, useDroppable } from "@dnd-kit/core";
 import "./Display.css";
 export const Display = () => {
   const dndContext = useDndContext();

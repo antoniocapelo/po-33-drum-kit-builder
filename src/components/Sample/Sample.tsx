@@ -1,8 +1,9 @@
 import { DragEvent, useRef, useState } from "react";
 import useKeypress from "react-use-keypress";
-import { Context, Frequency, Midi, Sampler, ToneAudioBuffer } from "tone";
+import { Context, Frequency, Sampler, ToneAudioBuffer } from "tone";
 
 import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useExperienceState } from "../../stores/experience-store";
 import {
   DEFAULT_BASE_NOTE,
   DEFAULT_BASE_VOL,
@@ -10,7 +11,6 @@ import {
   useSamplerStore,
 } from "../../stores/samplers-store";
 import "./Sample.css";
-import { useExperienceState } from "../../stores/experience-store";
 
 const keyNumberMap: Record<number, string | number> = {
   1: "1",

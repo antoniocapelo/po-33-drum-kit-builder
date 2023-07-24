@@ -5,7 +5,7 @@ interface ExperienceState {
   setCurrentPad: (padNumber: number) => void;
 }
 
-export const useExperienceState = create<ExperienceState>((set, get) => ({
+export const useExperienceState = create<ExperienceState>((set) => ({
   currentPad: undefined,
   setCurrentPad: (padNumber) => set({ currentPad: padNumber }),
 }));

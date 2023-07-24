@@ -2,25 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  Destination,
-  Frequency,
-  Master,
-  Offline,
-  Recorder,
-  Sampler,
-  ToneAudioBuffer,
-} from "tone";
-import atw from "audiobuffer-to-wav";
+import { createFFmpeg } from "@ffmpeg/ffmpeg";
+import { Frequency, Recorder, Sampler, ToneAudioBuffer } from "tone";
 import { create } from "zustand";
 import { SamplesMap } from "../App";
 import { playPad as playPadSounds } from "../components/Sample/playPad";
-import * as FFmpeg from "@ffmpeg/ffmpeg";
-import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
+import hat from "./../assets/hat.wav";
 import kick from "./../assets/kick.wav";
 import rim from "./../assets/rim.wav";
-import hat from "./../assets/hat.wav";
 
 export interface PadState {
   samplers: Array<Sampler>;
@@ -224,14 +214,14 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   },
   addSampler: (padNumber: string | number, sampler: Sampler) =>
     set(({ samplers }) => {
-      if (samplers[padNumber]) {
+      if (samplers[+padNumber]) {
         return {
           samplers: {
             ...samplers,
             [padNumber]: {
-              samplers: [...samplers[padNumber].samplers, sampler],
-              baseNote: samplers[padNumber].baseNote,
-              baseVolume: samplers[padNumber].baseVolume,
+              samplers: [...samplers[+padNumber].samplers, sampler],
+              baseNote: samplers[+padNumber].baseNote,
+              baseVolume: samplers[+padNumber].baseVolume,
               padNumber,
             },
           },
