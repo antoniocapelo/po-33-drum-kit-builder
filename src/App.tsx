@@ -22,6 +22,7 @@ import { Sample } from "./components/Sample/Sample";
 import { VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
 import { useExperienceState } from "./stores/experience-store";
 import { useSamplerStore } from "./stores/samplers-store";
+import { PitchKnob } from "./components/PitchKnob/PitchKnob";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
@@ -32,6 +33,7 @@ function App() {
   const copyPad = useSamplerStore((state) => state.copyPad);
   const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
+  const saveAll = useSamplerStore((state) => state.saveAll);
   const mergePads = useSamplerStore((state) => state.mergePads);
   const setCurrentPad = useExperienceState().setCurrentPad;
   const pointerSensor = useSensor(PointerSensor, {
@@ -85,16 +87,32 @@ function App() {
             ))}
           </div>
           <div className="func2">
-            {Array.from(new Array(2)).map((_, idx) => (
-              <button
-                disabled
-                key={idx}
-                style={{ background: "#ddd" }}
-              ></button>
-            ))}
-
+            <PitchKnob />
             <VolumeKnob />
             <button
+              title="Save drumkit to file"
+              style={{ background: "#ddd" }}
+              onClick={() => {
+                void saveAll();
+              }}
+            >
+              <svg
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                y="0px"
+                viewBox="0 0 92.2 122.88"
+                className="play"
+                width="16px"
+                height="16px"
+              >
+                <g>
+                  <polygon points="92.2,60.97 0,122.88 0,0 92.2,60.97" />
+                </g>
+              </svg>
+            </button>
+            <button
+              title="Play whole drumkit"
               style={{ background: "#ddd" }}
               onClick={() => {
                 void playAll();

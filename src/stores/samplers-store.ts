@@ -1,10 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Frequency, Recorder, Sampler, ToneAudioBuffer } from "tone";
+import {
+  Destination,
+  Frequency,
+  Master,
+  Offline,
+  Recorder,
+  Sampler,
+  ToneAudioBuffer,
+} from "tone";
+import atw from "audiobuffer-to-wav";
 import { create } from "zustand";
 import { SamplesMap } from "../App";
 import { playPad as playPadSounds } from "../components/Sample/playPad";
+import * as FFmpeg from "@ffmpeg/ffmpeg";
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
+
 import kick from "./../assets/kick.wav";
 import rim from "./../assets/rim.wav";
 import hat from "./../assets/hat.wav";
@@ -27,7 +40,9 @@ interface SamplersState {
   removeSampler: (pad: number) => void;
   playPad: (padNumber: number) => void;
   playAll: () => Promise<void>;
+  saveAll: () => Promise<void>;
   setVolume: (pad: number, to: number) => void;
+  setPitch: (pad: number, to: number) => void;
 }
 
 const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -48,6 +63,42 @@ initialSamples.forEach((sample, idx) => {
   };
 });
 
+const recorder = new Recorder();
+
+async function convertWebmToMp3(webmBlob: Blob): Promise<Blob> {
+  const ffmpeg = createFFmpeg({ log: true });
+  await ffmpeg.load();
+
+  const inputName = "input.webm";
+  const outputName = "output.mp3";
+  console.log("yo");
+
+  function blob2uint(blob: Blob) {
+    return new Response(blob).arrayBuffer().then((buffer) => {
+      return new Uint8Array(buffer);
+    });
+  }
+
+  const uint8data = await blob2uint(webmBlob);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+  ffmpeg.FS(
+    "writeFile",
+    inputName,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+    uint8data
+  );
+
+  console.log("yo");
+
+  await ffmpeg.run("-i", inputName, outputName);
+
+  const outputData = ffmpeg.FS("readFile", outputName);
+  const outputBlob = new Blob([outputData.buffer], { type: "audio/mp3" });
+
+  return outputBlob;
+}
+
 export const useSamplerStore = create<SamplersState>((set, get) => ({
   samplers: initialSamplers,
   playPad: (padNumber) => {
@@ -63,6 +114,34 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
       playPadSounds(samplers[+element]);
       await timer(350);
     }
+    await timer(350);
+  },
+  saveAll: async () => {
+    const samplers = get().samplers;
+
+    const keys = Object.keys(samplers);
+
+    for (let index = 0; index < keys.length; index++) {
+      const padNumber = keys[index];
+      const pad = samplers[+padNumber];
+      pad.samplers.forEach((s) => s.connect(recorder));
+    }
+
+    void recorder.start();
+
+    await get().playAll();
+    const rec = await recorder.stop();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const mp3 = await convertWebmToMp3(rec);
+    console.log("done", rec, mp3);
+
+    // download the recording by creating an anchor element and blob url
+    const url = URL.createObjectURL(mp3);
+    const anchor = document.createElement("a");
+    anchor.download = "recording.wav";
+    anchor.href = url;
+    anchor.click();
   },
   copyPad: (from: number, to: number) => {
     const fromPad = get().samplers[from];
@@ -143,7 +222,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     }
     playPadSounds(get().samplers[to]);
   },
-  addSampler: (padNumber, sampler) =>
+  addSampler: (padNumber: string | number, sampler: Sampler) =>
     set(({ samplers }) => {
       if (samplers[padNumber]) {
         return {
@@ -194,6 +273,22 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     });
     pad.samplers.forEach((sampler) => {
       sampler.volume.value = sampler.volume.value - diff;
+    });
+  },
+  setPitch: (padNumber, newValue) => {
+    const pad = get().samplers[padNumber];
+    const diff = pad.baseNote - newValue;
+    console.log(diff);
+    set(({ samplers }) => {
+      return {
+        samplers: {
+          ...samplers,
+          [padNumber]: {
+            ...samplers[padNumber],
+            baseNote: newValue,
+          },
+        },
+      };
     });
   },
 }));
