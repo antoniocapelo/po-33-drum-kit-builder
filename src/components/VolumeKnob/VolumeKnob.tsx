@@ -22,7 +22,7 @@ const MAX_VOL = 20;
 const MIN_VOL = -40;
 
 const MAX_UI = 50;
-const MIN_UI = -50;
+const MIN_UI = 0;
 
 export const VolumeKnob = () => {
   const currentPad = useExperienceState().currentPad;
@@ -51,7 +51,7 @@ export const VolumeKnob = () => {
       }}
       size={54}
       valueColor="#444"
-      rangeColor="#ddd"
+      rangeColor="#f9f9f9"
       valueTemplate={"Vol"}
       min={MIN_UI}
       max={MAX_UI}

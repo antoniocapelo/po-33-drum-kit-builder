@@ -80,6 +80,7 @@ export const Sample = ({ number }: { number: number }) => {
       buttonRef.current?.focus();
       buttonRef.current?.click();
     } else {
+      buttonRef.current?.focus();
       inputRef.current?.click();
     }
   });

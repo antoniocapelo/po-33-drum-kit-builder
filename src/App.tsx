@@ -77,11 +77,6 @@ function App() {
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <PrimeReactProvider>
         <Display />
-        <div className="func">
-          {Array.from(new Array(5)).map((_, idx) => (
-            <button key={idx} disabled style={{ background: "#ddd" }}></button>
-          ))}
-        </div>
         <div className="row">
           <div className="pads">
             {Array.from(new Array(16)).map((_, idx) => (

@@ -101,3 +101,30 @@ body {
   position: relative;
   left: 2px;
 }
+
+.p-knob {
+  background-color: #ddd;
+  border-radius: 50%;
+  height: 54px;
+  width: 54px;
+}
+
+.p-knob-value,
+.p-knob-range {
+  /* stroke-width: 17px; */
+}
+
+.p-knob-text {
+  fill: #333;
+}
+
+button:focus, button:focus-visible {
+  outline: 4px auto rgb(202 115 3) !important;
+}
+
+#root {
+    background: #b6b6b6;
+    border-radius: 12px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}

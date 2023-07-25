@@ -15,7 +15,8 @@ export const Display = () => {
 
   const style = {
     opacity: isOver ? 0.5 : 1,
-    background: isOver ? "red" : undefined,
+    background: isOver ? "#f14141" : undefined,
+    color: isOver ? "#f9f9f9" : undefined,
   };
 
   return (
@@ -23,15 +24,15 @@ export const Display = () => {
       {isDragging ? (
         <div>
           <p>Drag here to remove the sound</p>
-          <p>Drag on an empty one to copy it</p>
-          <p>Drag on another one to merge</p>
+          <p>Drag on an empty pad to copy it</p>
+          <p>Drag on a used pad to merge</p>
         </div>
       ) : null}
       {!isDragging && !isExporting ? (
         <div>
-          <p>Welcome to PO-33 drum kit util</p>
+          <p>Welcome to PO-33 drum kit builder.</p>
           <p>
-            Start adding samples and when you're ready, play them into your
+            Start adding samples and, when you're ready, play them into your
             PO-33.
           </p>
         </div>

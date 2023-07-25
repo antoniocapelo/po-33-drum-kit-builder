@@ -23,13 +23,13 @@
 }
 
 .sample .led.active {
-	background-color: red
+	background-color: rgb(252, 156, 31)
 }
 
 .sample input {
 	display: none;
 	opacity: 0;
-	background-color: red;
+	background-color: rgb(252, 156, 31)
 	top: 0;
 	bottom: 0;
 	left: 0;

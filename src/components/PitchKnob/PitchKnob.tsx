@@ -24,7 +24,7 @@ export const PitchKnob = () => {
       }}
       size={54}
       valueColor="#444"
-      rangeColor="#ddd"
+      rangeColor="#f9f9f9"
       valueTemplate={"Pitch"}
       min={-12}
       max={12}
