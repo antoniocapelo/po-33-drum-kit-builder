@@ -109,13 +109,9 @@ body {
   width: 54px;
 }
 
-.p-knob-value,
-.p-knob-range {
-  /* stroke-width: 17px; */
-}
-
 .p-knob-text {
   fill: #333;
+  font-weight: 500;
 }
 
 button:focus, button:focus-visible {
