@@ -1,7 +1,16 @@
+:root {
+  --pad-gap: 12px;
+  --pad-gap-small: 8px;
+}
+
 #root {
+  margin: 0 auto;
+}
+
+main {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem 1rem;
   text-align: center;
 }
 
@@ -64,7 +73,8 @@ body {
   position: fixed;
   overflow: hidden;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
 }
 
 
@@ -75,6 +85,7 @@ body {
   grid-template-columns: repeat(5, auto);
   grid-template-rows: auto;
   grid-auto-flow: row;
+  justify-content: center;
 }
 
 .func2 {
@@ -121,22 +132,46 @@ button:focus, button:focus-visible {
   outline: none !important;
 }
 
-#root {
-    background: #b6b6b6;
-    border-radius: 12px;
-    padding-top: 24px;
-    padding-bottom: 24px;
+main {
+  background: #b6b6b6;
+  border-radius: 12px;
+  padding-top: 24px;
+  padding-bottom: 24px;
 }
 
-#root button:focus {
+main button:focus {
   background-color: #fc9c1f;
 }
 
-#root button:active {
+main button:active {
   background-color: #f2961d;
 }
 
 
-#root button:hover {
+main button:hover {
   border-color: #fc9c1f;
+}
+
+.descs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 4px var(--pad-gap-small);
+}
+.desc {
+  margin: 0;
+  text-align: center;
+}
+
+@media only screen and (max-width: 375px)  {
+  main {
+    padding: 1rem var(--pad-gap-small);
+  }
+  .pads {
+    grid-gap: var(--pad-gap-small);
+  }
+  .row {
+    -gap: var(--pad-gap-small);
+  }
+
 }

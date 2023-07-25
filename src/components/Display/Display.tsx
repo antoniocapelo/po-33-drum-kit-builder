@@ -34,10 +34,10 @@ export const Display = () => {
       ) : null}
       {!isDragging && isIdle ? (
         <div>
-          <p>Welcome to PO-33 drum kit builder.</p>
+          <p>PO-33 drum kit builder</p>
           <p>
-            Start adding samples and, when you're ready, play them into your
-            PO-33.
+            Add drum samples and, when you're ready, save them to a file or play
+            them into your PO-33.
           </p>
         </div>
       ) : null}

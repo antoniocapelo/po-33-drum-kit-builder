@@ -16,3 +16,9 @@
 .display p {
 	margin: 0;
 }
+@media only screen and (max-width: 375px)  {
+  .display {
+		margin-bottom: 16px;
+  }
+
+}
