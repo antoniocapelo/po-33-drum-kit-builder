@@ -150,12 +150,13 @@ function App() {
         <div className="descs">
           <p className="desc">
             <a
+              style={{ textDecoration: "underline", cursor: "pointer" }}
               onClick={(e) => {
                 e.preventDefault();
                 setShowAbout(true);
               }}
             >
-              About
+              What is this?
             </a>
           </p>
           <p className="desc">
