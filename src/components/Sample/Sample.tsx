@@ -191,6 +191,7 @@ export const Sample = ({ number }: { number: number }) => {
           }
           {...listeners}
           {...attributes}
+          tabIndex={-1}
         >
           <button ref={buttonRef} onClick={handleClick}>
             {number}

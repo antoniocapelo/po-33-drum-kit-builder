@@ -112,10 +112,13 @@ body {
 .p-knob-text {
   fill: #333;
   font-weight: 500;
+  font-size: 18px;
 }
 
 button:focus, button:focus-visible {
-  outline: 4px auto rgb(202 115 3) !important;
+  /* outline: 4px auto rgb(202 115 3) !important; */
+  background-color: #fc9c1f;
+  outline: none !important;
 }
 
 #root {
@@ -123,4 +126,17 @@ button:focus, button:focus-visible {
     border-radius: 12px;
     padding-top: 24px;
     padding-bottom: 24px;
+}
+
+#root button:focus {
+  background-color: #fc9c1f;
+}
+
+#root button:active {
+  background-color: #f2961d;
+}
+
+
+#root button:hover {
+  border-color: #fc9c1f;
 }
