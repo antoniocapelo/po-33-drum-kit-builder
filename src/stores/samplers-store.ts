@@ -58,12 +58,15 @@ const recorder = new Recorder();
 async function convertWebmToMp3(webmBlob: Blob): Promise<Blob> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const ffmpeg = createFFmpeg({ log: true });
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  await ffmpeg.load();
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    await ffmpeg.load();
+  } catch (e) {
+    console.error(e);
+  }
 
   const inputName = "input.webm";
   const outputName = "output.mp3";
-  console.log("yo");
 
   function blob2uint(blob: Blob) {
     return new Response(blob).arrayBuffer().then((buffer) => {
