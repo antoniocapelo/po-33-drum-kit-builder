@@ -56,7 +56,9 @@ initialSamples.forEach((sample, idx) => {
 const recorder = new Recorder();
 
 async function convertWebmToMp3(webmBlob: Blob): Promise<Blob> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const ffmpeg = createFFmpeg({ log: true });
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   await ffmpeg.load();
 
   const inputName = "input.webm";
@@ -81,8 +83,10 @@ async function convertWebmToMp3(webmBlob: Blob): Promise<Blob> {
 
   console.log("yo");
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   await ffmpeg.run("-i", inputName, outputName);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const outputData = ffmpeg.FS("readFile", outputName);
   const outputBlob = new Blob([outputData.buffer], { type: "audio/mp3" });
 
