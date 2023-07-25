@@ -3,7 +3,11 @@ import "./Display.css";
 import { useExperienceState } from "../../stores/experience-store";
 export const Display = () => {
   const dndContext = useDndContext();
-  const isExporting = useExperienceState((state) => state.isExporting);
+  const isIdle = useExperienceState((state) => state.state === "idle");
+  const isExporting = useExperienceState(
+    (state) => state.state === "exporting"
+  );
+  const isPlaying = useExperienceState((state) => state.state === "playing");
   const { isOver, setNodeRef } = useDroppable({
     id: `droppable-display`,
     data: {
@@ -28,7 +32,7 @@ export const Display = () => {
           <p>Drag on a used pad to merge</p>
         </div>
       ) : null}
-      {!isDragging && !isExporting ? (
+      {!isDragging && isIdle ? (
         <div>
           <p>Welcome to PO-33 drum kit builder.</p>
           <p>
@@ -40,6 +44,11 @@ export const Display = () => {
       {isExporting ? (
         <div>
           <p>Exporting…</p>
+        </div>
+      ) : null}
+      {isPlaying ? (
+        <div>
+          <p>Playing…</p>
         </div>
       ) : null}
     </div>

@@ -34,8 +34,10 @@ function App() {
   const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
   const saveAll = useSamplerStore((state) => state.saveAll);
-  const isExporting = useExperienceState((state) => state.isExporting);
+  const isBusy = useExperienceState((state) => state.state !== "idle");
   const setIsExporting = useExperienceState((state) => state.setIsExporting);
+  const setIsPlaying = useExperienceState((state) => state.setIsPlaying);
+  const setIsIdle = useExperienceState((state) => state.setIsIdle);
   const mergePads = useSamplerStore((state) => state.mergePads);
   const setCurrentPad = useExperienceState().setCurrentPad;
   const pointerSensor = useSensor(PointerSensor, {
@@ -87,18 +89,18 @@ function App() {
             <PitchKnob />
             <VolumeKnob />
             <button
-              disabled={isExporting}
+              disabled={isBusy}
               title="Save drum kit to file"
               style={{ background: "#ddd" }}
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={async () => {
-                setIsExporting(true);
+                setIsExporting();
                 try {
                   await saveAll();
                 } catch (e) {
-                  setIsExporting(false);
+                  setIsIdle();
                 }
-                setIsExporting(false);
+                setIsIdle();
               }}
             >
               <svg
@@ -115,8 +117,11 @@ function App() {
             <button
               title="Play whole drum kit"
               style={{ background: "#ddd" }}
-              onClick={() => {
-                void playAll();
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={async () => {
+                setIsPlaying();
+                await playAll();
+                setIsIdle();
               }}
             >
               <svg
