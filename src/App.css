@@ -175,3 +175,40 @@ main button:hover {
   }
 
 }
+
+
+.cookie.msg {
+  background-color: #333 !important;
+  bottom: 20px !important;
+  left: 20px !important;
+  right: 20px !important;
+  width: auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.6) !important;
+  border-radius: 4px !important;
+  max-width: 440px !important;
+}
+
+#rcc-confirm-button {
+  background-color: #fc9c1f !important;
+  color: white !important;
+}
+
+#rcc-decline-button {
+  color: #fc9c1f !important;
+  background: white !important;
+}
+
+.btns {
+  display: flex;
+  gap: 4px;
+}
+
+#root .btns > button {
+  border-radius: 4px !important;
+  min-width: 90px !important;
+  width: auto;
+  text-transform: uppercase !important;
+  font-weight: 600;
+}

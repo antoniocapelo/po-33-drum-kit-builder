@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import CookieConsent from "react-cookie-consent";
+
 import {
   DndContext,
   DragEndEvent,
@@ -15,16 +17,17 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 //core
 import "primereact/resources/primereact.min.css";
 
+import { useState } from "react";
 import { ToneAudioBuffer } from "tone";
 import "./App.css";
+import { About } from "./components/About/About";
 import { Display } from "./components/Display/Display";
 import { PitchKnob } from "./components/PitchKnob/PitchKnob";
 import { Sample } from "./components/Sample/Sample";
 import { VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
+import { initGA } from "./initiGA";
 import { useExperienceState } from "./stores/experience-store";
 import { useSamplerStore } from "./stores/samplers-store";
-import { useState } from "react";
-import { About } from "./components/About/About";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
@@ -49,6 +52,10 @@ function App() {
     },
   });
   const sensors = useSensors(pointerSensor);
+
+  const handleAcceptCookie = () => {
+    initGA();
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -166,6 +173,28 @@ function App() {
             </a>
           </p>
         </div>
+        <CookieConsent
+          enableDeclineButton
+          onAccept={handleAcceptCookie}
+          containerClasses="cookie msg"
+          buttonText="Agree"
+          declineButtonText="No thanks"
+          buttonClasses="btn"
+          buttonWrapperClasses="btns"
+        >
+          <div className="cookie-message">
+            PO-33-util uses cookies to deliver and enhance the quality of its
+            services and to analyze traffic. If you agree, cookies are also used
+            to serve advertising and to personalize the content and
+            advertisements that you see.{" "}
+            <a
+              href="https://policies.google.com/technologies/cookies"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </CookieConsent>
       </PrimeReactProvider>
     </DndContext>
   );
