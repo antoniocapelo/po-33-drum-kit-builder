@@ -4,8 +4,6 @@ export const initGA = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const id = import.meta.env.VITE_GA as string;
   if (id && process.env.NODE_ENV === "production") {
-    console.log("starting GA…");
-
     ReactGA.initialize([
       {
         trackingId: id,
