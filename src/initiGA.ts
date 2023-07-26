@@ -6,7 +6,7 @@ export const initGA = () => {
   if (process.env.NODE_ENV === "production") {
     console.log("starting GA…");
 
-    ReactGA.initialize(id as string);
+    ReactGA.initialize(id as string, { debug: true });
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
 };
