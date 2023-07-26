@@ -187,12 +187,14 @@ function App() {
             services and to analyze traffic. If you agree, cookies are also used
             to serve advertising and to personalize the content and
             advertisements that you see.{" "}
-            <a
-              href="https://policies.google.com/technologies/cookies"
-              target="_blank"
-            >
-              Learn more
-            </a>
+            <p style={{ margin: 0 }}>
+              <a
+                href="https://policies.google.com/technologies/cookies"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </p>
           </div>
         </CookieConsent>
       </PrimeReactProvider>
