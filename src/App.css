@@ -157,6 +157,7 @@ main button:hover {
   flex-direction: row;
   justify-content: space-between;
   padding: 4px var(--pad-gap-small);
+  margin-top: 16px;
 }
 .desc {
   margin: 0;
