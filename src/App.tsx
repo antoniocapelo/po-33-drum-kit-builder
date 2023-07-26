@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import CookieConsent from "react-cookie-consent";
+import CookieConsent, {
+  Cookies,
+  getCookieConsentValue,
+} from "react-cookie-consent";
 
 import {
   DndContext,
@@ -17,7 +20,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 //core
 import "primereact/resources/primereact.min.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToneAudioBuffer } from "tone";
 import "./App.css";
 import { About } from "./components/About/About";
@@ -53,8 +56,25 @@ function App() {
   });
   const sensors = useSensors(pointerSensor);
 
+  useEffect(() => {
+    const isConsent = getCookieConsentValue();
+    if (isConsent === "true") {
+      handleAcceptCookie();
+    }
+  }, []);
+
   const handleAcceptCookie = () => {
     initGA();
+  };
+
+  const handleDeclineCookie = () => {
+    //remove google analytics cookies
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    Cookies.remove("_ga");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    Cookies.remove("_gat");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    Cookies.remove("_gid");
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -176,6 +196,7 @@ function App() {
         <CookieConsent
           enableDeclineButton
           onAccept={handleAcceptCookie}
+          onDecline={handleDeclineCookie}
           containerClasses="cookie msg"
           buttonText="Agree"
           declineButtonText="No thanks"
