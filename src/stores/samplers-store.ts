@@ -33,6 +33,7 @@ interface SamplersState {
   saveAll: () => Promise<void>;
   setVolume: (pad: number, to: number) => void;
   setPitch: (pad: number, to: number) => void;
+  hasUploadedAtLeastOnce: boolean;
 }
 
 const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -96,8 +97,20 @@ async function convertWebmToMp3(webmBlob: Blob): Promise<Blob> {
   return outputBlob;
 }
 
+const key = "has-uploaded-item";
+const hasAnyPadBeenAdded = () => {
+  if (typeof window !== "undefined") {
+    const hasLSItem = localStorage.getItem(key);
+    if (hasLSItem) {
+      return true;
+    }
+  }
+  return false;
+};
+
 export const useSamplerStore = create<SamplersState>((set, get) => ({
-  samplers: initialSamplers,
+  hasUploadedAtLeastOnce: hasAnyPadBeenAdded(),
+  samplers: hasAnyPadBeenAdded() ? {} : initialSamplers,
   playPad: (padNumber) => {
     playPadSounds(get().samplers[padNumber]);
   },
@@ -218,8 +231,12 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     }
     playPadSounds(get().samplers[to]);
   },
-  addSampler: (padNumber: string | number, sampler: Sampler) =>
-    set(({ samplers }) => {
+  addSampler: (padNumber: string | number, sampler: Sampler) => {
+    if (!get().hasUploadedAtLeastOnce) {
+      localStorage.setItem(key, "true");
+    }
+
+    return set(({ samplers }) => {
       if (samplers[+padNumber]) {
         return {
           samplers: {
@@ -244,7 +261,8 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
           },
         },
       };
-    }),
+    });
+  },
   removeSampler: (pad: number) =>
     set(({ samplers }) => {
       delete samplers[pad];
