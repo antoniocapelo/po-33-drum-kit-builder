@@ -11,6 +11,7 @@ import { playPad as playPadSounds } from "../components/Sample/playPad";
 import hat from "./../assets/hat.wav";
 import kick from "./../assets/kick.wav";
 import rim from "./../assets/rim.wav";
+import { stopPad } from "../components/Sample/stopPad";
 
 export interface PadState {
   samplers: Array<Sampler>;
@@ -30,6 +31,7 @@ interface SamplersState {
   removeSampler: (pad: number) => void;
   playPad: (padNumber: number) => void;
   playAll: () => Promise<void>;
+  stopAll: () => void;
   saveAll: () => Promise<void>;
   setVolume: (pad: number, to: number) => void;
   setPitch: (pad: number, to: number) => void;
@@ -125,6 +127,16 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
       await timer(350);
     }
     await timer(350);
+  },
+  stopAll: () => {
+    const samplers = get().samplers;
+
+    const keys = Object.keys(samplers);
+
+    for (let index = 0; index < keys.length; index++) {
+      const element = keys[index];
+      stopPad(samplers[+element]);
+    }
   },
   saveAll: async () => {
     const samplers = get().samplers;

@@ -75,7 +75,6 @@ export const Sample = ({ number }: { number: number }) => {
     if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) {
       return;
     }
-    // Do something when the user has pressed the Escape key
     if (pad) {
       buttonRef.current?.focus();
       buttonRef.current?.click();

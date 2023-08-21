@@ -18,14 +18,20 @@ export const About = ({ onDismiss }: { onDismiss: () => void }) => {
           .
         </p>
         <p>
-          You can add your own samples by dragging-and-dropping them on pads or
-          by clicking them. Then, you can tweak their volume, their pitch and
-          you can even "merge" them by dragging one over the other.
+          You can <strong>add</strong> your own samples by dragging-and-dropping
+          them on pads or by clicking them. Then, you can <strong>tweak</strong>{" "}
+          their volume, their pitch and you can even "merge" them by dragging
+          one over the other.
         </p>
         <p>
           Afterwards, just press "play" and sample into a drum slot of your
           PO-33 or press "save" to get a .wav version of the drum kit for future
           usages.
+        </p>
+        <p>
+          To <strong>delete</strong> samples, drag the pad to the display. To{" "}
+          <strong>stop</strong> all samples from playing, press the Escape key
+          or click the display.
         </p>
       </div>
       <button onClick={onDismiss}>

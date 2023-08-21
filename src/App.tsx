@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import useKeypress from "react-use-keypress";
 import CookieConsent, {
   Cookies,
   getCookieConsentValue,
@@ -48,6 +49,7 @@ function App() {
   const setIsPlaying = useExperienceState((state) => state.setIsPlaying);
   const setIsIdle = useExperienceState((state) => state.setIsIdle);
   const mergePads = useSamplerStore((state) => state.mergePads);
+  const stopAll = useSamplerStore().stopAll;
   const setCurrentPad = useExperienceState().setCurrentPad;
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
@@ -62,6 +64,14 @@ function App() {
       handleAcceptCookie();
     }
   }, []);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  useKeypress("Escape", (e: KeyboardEvent) => {
+    if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) {
+      return;
+    }
+    stopAll();
+  });
 
   const handleAcceptCookie = () => {
     initGA();

@@ -1,7 +1,9 @@
 import { useDndContext, useDroppable } from "@dnd-kit/core";
 import "./Display.css";
 import { useExperienceState } from "../../stores/experience-store";
+import { useSamplerStore } from "../../stores/samplers-store";
 export const Display = () => {
+  const stopAll = useSamplerStore().stopAll;
   const dndContext = useDndContext();
   const isIdle = useExperienceState((state) => state.state === "idle");
   const isExporting = useExperienceState(
@@ -24,7 +26,7 @@ export const Display = () => {
   };
 
   return (
-    <div style={style} ref={setNodeRef} className="display">
+    <div style={style} ref={setNodeRef} className="display" onClick={stopAll}>
       {isDragging ? (
         <div>
           <p>Drag here to remove the sound</p>
