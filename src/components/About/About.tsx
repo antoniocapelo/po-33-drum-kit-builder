@@ -34,7 +34,9 @@ export const About = ({ onDismiss }: { onDismiss: () => void }) => {
           or click the display.
         </p>
       </div>
-      <button onClick={onDismiss}>
+      <button onClick={onDismiss}
+        style={{ background: "#ddd" }}
+      >
         <svg
           height="12px"
           id="Layer_1"

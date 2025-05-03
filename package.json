@@ -14,6 +14,7 @@
     "@ffmpeg/core": "^0.11.0",
     "@ffmpeg/ffmpeg": "^0.11.6",
     "audiobuffer-to-wav": "^1.0.0",
+    "draw-wave": "^2.0.0",
     "extendable-media-recorder-wav-encoder": "^7.0.95",
     "i": "^0.3.7",
     "npm": "^9.8.1",
