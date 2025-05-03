@@ -186,14 +186,9 @@ function App() {
         </main>
         <div className="descs">
           <p className="desc">
-            <a
-              style={{ textDecoration: "underline", cursor: "pointer" }}
-              onClick={(e) => {
-                e.preventDefault();
-                setShowAbout(true);
-              }}
-            >
-              What is this?
+            Like it? {" "}
+            <a href="https://ko-fi.com/capelo" target="_blank">
+              Buy me a coffee!
             </a>
           </p>
           <p className="desc">
@@ -203,6 +198,21 @@ function App() {
             </a>
           </p>
         </div>
+        <div className="descs center">
+          <p className="desc">
+            <a
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={(e) => {
+                e.preventDefault();
+                setShowAbout(true);
+              }}
+            >
+              About
+            </a>
+          </p>
+
+        </div>
+
         <CookieConsent
           enableDeclineButton
           onAccept={handleAcceptCookie}

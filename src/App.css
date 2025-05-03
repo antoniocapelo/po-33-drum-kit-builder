@@ -20,9 +20,11 @@ main {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -31,6 +33,7 @@ main {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -91,7 +94,7 @@ body {
 .func2 {
   display: flex;
   flex-direction: column;
-  gap:12px;
+  gap: 12px;
 }
 
 .row {
@@ -126,7 +129,8 @@ body {
   font-size: 18px;
 }
 
-button:focus, button:focus-visible {
+button:focus,
+button:focus-visible {
   /* outline: 4px auto rgb(202 115 3) !important; */
   background-color: #fc9c1f;
   outline: none !important;
@@ -159,18 +163,28 @@ main button:hover {
   padding: 4px var(--pad-gap-small);
   margin-top: 16px;
 }
+
+.center {
+  margin-top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .desc {
   margin: 0;
   text-align: center;
 }
 
-@media only screen and (max-width: 375px)  {
+@media only screen and (max-width: 375px) {
   main {
     padding: 1rem var(--pad-gap-small);
   }
+
   .pads {
     grid-gap: var(--pad-gap-small);
   }
+
   .row {
     -gap: var(--pad-gap-small);
   }
@@ -187,14 +201,14 @@ main button:hover {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 20px !important;
-  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.6) !important;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.6) !important;
   border-radius: 4px !important;
   max-width: 440px !important;
   flex-direction: column !important;
   padding: 20px;
 }
 
-.cookie.msg > div {
+.cookie.msg>div {
   flex: 1 !important;
   margin: 0 !important;
 }
@@ -214,7 +228,7 @@ main button:hover {
   gap: 16px;
 }
 
-#root .btns > button {
+#root .btns>button {
   border-radius: 4px !important;
   min-width: 90px !important;
   width: auto;
