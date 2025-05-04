@@ -1,7 +1,7 @@
 .display {
 	margin-bottom: 32px;
 	position: relative;
-	background-color: #4e5858;
+	background-color: #efedea;
 	display: flex;
 	font-size: 12px;
 	align-items: center;
@@ -12,6 +12,12 @@
 	box-sizing: border-box;
 	max-width: 318px;
 }
+
+@media (prefers-color-scheme: dark) {
+	.display {
+	  background: #4e5858;
+	}
+  }
 
 .info {
 	display: flex;

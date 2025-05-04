@@ -1,6 +1,7 @@
 :root {
   --pad-gap: 12px;
   --pad-gap-small: 8px;
+  color-scheme: light dark;
 }
 
 #root {
