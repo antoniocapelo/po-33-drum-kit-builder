@@ -32,6 +32,7 @@ import { VolumeKnob } from "./components/VolumeKnob/VolumeKnob";
 import { initGA } from "./initiGA";
 import { useExperienceState } from "./stores/experience-store";
 import { useSamplerStore } from "./stores/samplers-store";
+import { EffectKnob } from "./components/EffectKnob/EffectKnob";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
@@ -122,6 +123,13 @@ function App() {
           <Display />
           {showAbout && <About onDismiss={() => setShowAbout(false)} />}
           <div className="row">
+            {/* Add the effect knobs here */}
+            <div className="effects">
+              <EffectKnob effect="bitCrusher" label="BitCrusher" min={0} max={100} />
+              <EffectKnob effect="distortion" label="Distortion" min={0} max={100} />
+              <EffectKnob effect="reverb" label="Reverb" min={0} max={100} />
+              <EffectKnob effect="chorus" label="Chorus" min={0} max={100} />
+            </div>
             <div className="pads">
               {Array.from(new Array(16)).map((_, idx) => (
                 <Sample key={idx} number={idx + 1} />
