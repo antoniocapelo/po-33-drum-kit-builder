@@ -6,7 +6,7 @@ export const About = ({ onDismiss }: { onDismiss: () => void }) => {
       <div className="overlay"></div>
       <div className="content">
         <p>
-          Simple web utility for building drum kits for the amazing Teenage
+          Web utility for building drum kits for the amazing Teenage
           Engineering{" "}
           <a
             href="https://teenage.engineering/store/po-33/"
@@ -20,7 +20,7 @@ export const About = ({ onDismiss }: { onDismiss: () => void }) => {
         <p>
           You can <strong>add</strong> your own samples by dragging-and-dropping
           them on pads or by clicking them. Then, you can <strong>tweak</strong>{" "}
-          their volume, their pitch and you can even "merge" them by dragging
+          their volume, pitch, and add some basic effect via the knobs. You can even "merge" them by dragging
           one over the other.
         </p>
         <p>

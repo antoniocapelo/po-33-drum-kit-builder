@@ -214,7 +214,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     for (let index = 0; index < keys.length; index++) {
       const padNumber = keys[index];
       const pad = samplers[+padNumber];
-      pad.samplers.forEach((s) => s.connect(recorder));
+      pad.fx.feedbackDelay.connect(recorder);
     }
 
     void recorder.start();

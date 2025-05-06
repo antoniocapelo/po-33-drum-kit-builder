@@ -125,9 +125,9 @@ function App() {
           <div className="row">
             {/* Add the effect knobs here */}
             <div className="effects">
-              <EffectKnob effect="bitCrusher" label="BitCrusher" min={0} max={100} />
-              <EffectKnob effect="distortion" label="Distortion" min={0} max={100} />
-              <EffectKnob effect="reverb" label="Reverb" min={0} max={100} />
+              <EffectKnob effect="bitCrusher" label="BitC" min={0} max={100} />
+              <EffectKnob effect="distortion" label="Dist" min={0} max={100} />
+              <EffectKnob effect="reverb" label="Rev" min={0} max={100} />
               <EffectKnob effect="feedbackDelay" label="Delay" min={0} max={100} />
             </div>
             <div className="pads">
@@ -146,7 +146,9 @@ function App() {
                 onClick={async () => {
                   setIsExporting();
                   try {
+                    console.log('Exporting...');
                     await saveAll();
+                    console.log('Done exporting.')
                   } catch (e) {
                     setIsIdle();
                   }

@@ -2,7 +2,7 @@ import { useDndContext, useDroppable } from "@dnd-kit/core";
 import drawBuffer from 'draw-wave'
 import "./Display.css";
 import { useExperienceState } from "../../stores/experience-store";
-import { useSamplerStore } from "../../stores/samplers-store";
+import { DEFAULT_BASE_NOTE, useSamplerStore } from "../../stores/samplers-store";
 import { useEffect, useRef } from "react";
 
 export function mapValueToRange(
@@ -11,8 +11,8 @@ export function mapValueToRange(
   fromMax: number,
   toMin: number,
   toMax: number,
-  round: boolean = true,
-  decimalPlaces: number = 3,
+  round = true,
+  decimalPlaces = 3,
 ) {
   // First, normalize the input value to a value between 0 and 1 within its range.
   const normalizedValue = (value - fromMin) / (fromMax - fromMin);
@@ -57,7 +57,7 @@ export const Display = () => {
   };
 
   useEffect(() => {
-    if (isPlaying || isDragging) {
+    if (isPlaying || isDragging || isExporting) {
       canvasRef.current?.getContext('2d')?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     } else if (currentPad) {
       const context = canvasRef.current?.getContext('2d');
@@ -65,10 +65,9 @@ export const Display = () => {
         const width = canvasRef.current.width;
         const height = canvasRef.current.height;
         context?.clearRect(0, 0, width, height);
-        console.log('currentPad', currentPad);
         currentPad.forEach((sample) => {
           // @ts-ignore
-          const buffer = sample._buffers.get('60'); // Replace 'C4' with the key of the sample you want;
+          const buffer = sample._buffers.get(DEFAULT_BASE_NOTE); // Replace 'C4' with the key of the sample you want;
           const duration = buffer?.duration;
           if (buffer && duration) {
             drawBuffer.canvas(canvasRef.current, buffer, '#fc9c1f');
@@ -94,7 +93,7 @@ export const Display = () => {
       }
     }
 
-  }, [currentPad, isPlaying, isDragging])
+  }, [currentPad, isPlaying, isDragging, isExporting])
 
   return (
     <div style={style} ref={setNodeRef} className="display" onClick={stopAll}>
