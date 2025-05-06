@@ -244,3 +244,10 @@ main button:hover {
   gap: 12px;
   margin-bottom: 16px;
 }
+
+.abt {
+  background: orange;
+  color: #555;
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+}

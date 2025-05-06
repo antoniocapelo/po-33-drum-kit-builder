@@ -122,14 +122,17 @@ function App() {
         <main>
           <Display />
           {showAbout && <About onDismiss={() => setShowAbout(false)} />}
-<div className="effects">
-              <EffectKnob effect="bitCrusher" label="BitC" min={0} max={100} />
-              <EffectKnob effect="distortion" label="Dist" min={0} max={100} />
-              <EffectKnob effect="reverb" label="Rev" min={0} max={100} />
-              <EffectKnob effect="feedbackDelay" label="Delay" min={0} max={100} />
+          <div className="effects">
+            <EffectKnob effect="bitCrusher" label="BitC" min={0} max={100} />
+            <EffectKnob effect="distortion" label="Dist" min={0} max={100} />
+            <EffectKnob effect="reverb" label="Rev" min={0} max={100} />
+            <EffectKnob effect="feedbackDelay" label="Delay" min={0} max={100} />
+            <div className="sample">
+              <button className="abt" onClick={() => setShowAbout(true)}>About</button>
             </div>
+          </div>
           <div className="row">
-            
+
             <div className="pads">
               {Array.from(new Array(16)).map((_, idx) => (
                 <Sample key={idx} number={idx + 1} />
@@ -208,20 +211,7 @@ function App() {
             </a>
           </p>
         </div>
-        <div className="descs center">
-          <p className="desc">
-            <a
-              style={{ textDecoration: "underline", cursor: "pointer" }}
-              onClick={(e) => {
-                e.preventDefault();
-                setShowAbout(true);
-              }}
-            >
-              About
-            </a>
-          </p>
 
-        </div>
 
         <CookieConsent
           enableDeclineButton

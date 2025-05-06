@@ -1,6 +1,11 @@
+import { useEffect, useRef } from "react";
 import "./About.css";
 
 export const About = ({ onDismiss }: { onDismiss: () => void }) => {
+  const btnRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    btnRef.current?.focus();
+  }, []);
   return (
     <div className="about">
       <div className="overlay"></div>
@@ -34,8 +39,8 @@ export const About = ({ onDismiss }: { onDismiss: () => void }) => {
           or click the display.
         </p>
       </div>
-      <button onClick={onDismiss}
-        style={{ background: "#ddd" }}
+      <button tabIndex={0} onClick={onDismiss}
+        ref={btnRef}
       >
         <svg
           height="12px"

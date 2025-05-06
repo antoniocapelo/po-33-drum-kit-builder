@@ -13,6 +13,7 @@
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	isolation: isolate;
 }
 
 .content {
@@ -30,4 +31,16 @@
 .content p {
 	margin-top: 0;
 	margin-bottom: 8px;
+}
+
+
+.about button {
+	background-color: #ddd;
+}
+
+.about button:focus,
+.about button:focus-visible {
+	background-color: #ddd;
+  outline: 4px auto -webkit-focus-ring-color;
+  border-color: #f2961d;
 }
