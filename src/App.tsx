@@ -128,7 +128,7 @@ function App() {
               <EffectKnob effect="bitCrusher" label="BitCrusher" min={0} max={100} />
               <EffectKnob effect="distortion" label="Distortion" min={0} max={100} />
               <EffectKnob effect="reverb" label="Reverb" min={0} max={100} />
-              <EffectKnob effect="chorus" label="Chorus" min={0} max={100} />
+              <EffectKnob effect="feedbackDelay" label="Delay" min={0} max={100} />
             </div>
             <div className="pads">
               {Array.from(new Array(16)).map((_, idx) => (

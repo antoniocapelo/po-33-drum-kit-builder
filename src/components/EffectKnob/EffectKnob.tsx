@@ -1,10 +1,10 @@
 import { Knob } from "primereact/knob";
 import { useExperienceState } from "../../stores/experience-store";
 import { useSamplerStore } from "../../stores/samplers-store";
-import { Distortion, Reverb, Chorus, BitCrusher } from "tone";
+import { Distortion, Reverb, FeedbackDelay, BitCrusher } from "tone";
 
 interface EffectKnobProps {
-  effect: "bitCrusher" | "distortion" | "reverb" | "chorus";
+  effect: "bitCrusher" | "distortion" | "reverb" | "feedbackDelay";
   label: string;
   min: number;
   max: number;
@@ -16,7 +16,7 @@ export const EffectKnob = ({ effect, label, min, max }: EffectKnobProps) => {
   const setFxAmount = useSamplerStore().setFxAmount;
 
   const currentPadState = samplers[currentPad as number];
-  const effectNode = currentPadState?.fx[effect];
+  const effectNode = currentPadState?.fx[effect] as BitCrusher | Distortion | Reverb | FeedbackDelay | null;
   const wetValue = effectNode ? effectNode.wet.value : 0;
 
   return (
@@ -36,10 +36,11 @@ export const EffectKnob = ({ effect, label, min, max }: EffectKnobProps) => {
               (effectNode as Distortion).distortion = intensity * 1; // Map to 0-1 distortion
               break;
             case "reverb":
-              (effectNode as Reverb).decay = intensity * 10; // Map to 0-5 seconds decay
+              (effectNode as Reverb).decay = intensity * 10; // Map to 0-10 seconds decay
               break;
-            case "chorus":
-              (effectNode as Chorus).depth = intensity; // Map to 0-1 depth
+            case "feedbackDelay":
+              (effectNode as FeedbackDelay).delayTime.value = intensity * 0.5; // Map to 0-1 seconds delay
+              (effectNode as FeedbackDelay).feedback.value = intensity * 0.5; // Map to 0-1 seconds delay
               break;
           }
         }

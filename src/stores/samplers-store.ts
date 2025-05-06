@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createFFmpeg } from "@ffmpeg/ffmpeg";
 import { Frequency, Recorder, Sampler, ToneAudioBuffer } from "tone";
-import { BitCrusher, Distortion, Reverb, Chorus } from "tone";
+import { BitCrusher, Distortion, Reverb, Chorus, FeedbackDelay } from "tone";
 import { create } from "zustand";
 import { SamplesMap } from "../App";
 import { playPad as playPadSounds } from "../components/Sample/playPad";
@@ -23,7 +23,7 @@ export interface PadState {
     bitCrusher: BitCrusher;
     distortion: Distortion;
     reverb: Reverb;
-    chorus: Chorus;
+    feedbackDelay: FeedbackDelay;
   };
 }
 
@@ -50,7 +50,6 @@ interface SamplersState {
 const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 const createFreshEffects = () => {
-
   // Initialize effects
   const bitCrusher = new BitCrusher(4).toDestination();
   bitCrusher.wet.value = 0; // Start turned off
@@ -61,23 +60,24 @@ const createFreshEffects = () => {
   const reverb = new Reverb({ decay: 2 }).toDestination();
   reverb.wet.value = 0; // Start turned off
 
-  const chorus = new Chorus(4, 2.5, 0.5).toDestination();
-  chorus.wet.value = 0; // Start turned off
+  const feedbackDelay = new FeedbackDelay(0.5, 0.8).toDestination();
+  feedbackDelay.wet.value = 0; // Start turned off
 
   return {
     bitCrusher,
     distortion,
     reverb,
-    chorus,
+    feedbackDelay,
   };
-}
+};
 
 const initialSamples = [kick, hat, rim];
 const initialSamplers: Record<number, PadState> = {};
 initialSamples.forEach((sample, idx) => {
   const padNumber = idx + 1;
 
-  const { chorus, bitCrusher, reverb, distortion } = createFreshEffects();
+  const { feedbackDelay, bitCrusher, reverb, distortion } =
+    createFreshEffects();
 
   const player = new Sampler({
     [DEFAULT_BASE_NOTE]: sample,
@@ -85,7 +85,7 @@ initialSamples.forEach((sample, idx) => {
     .connect(bitCrusher)
     .connect(distortion)
     .connect(reverb)
-    .connect(chorus);
+    .connect(feedbackDelay);
 
   initialSamplers[padNumber] = {
     padNumber: padNumber,
@@ -96,7 +96,7 @@ initialSamples.forEach((sample, idx) => {
       bitCrusher,
       distortion,
       reverb,
-      chorus,
+      feedbackDelay,
     },
   };
 });
@@ -209,7 +209,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
 
       // Copy effect parameters and wet values
       newState.fx.bitCrusher.wet.value = fromPad.fx.bitCrusher.wet.value;
-      newState.fx.bitCrusher.bits.value = fromPad.fx.bitCrusher.bits.value
+      newState.fx.bitCrusher.bits.value = fromPad.fx.bitCrusher.bits.value;
 
       newState.fx.distortion.wet.value = fromPad.fx.distortion.wet.value;
       newState.fx.distortion.distortion = fromPad.fx.distortion.distortion;
@@ -217,11 +217,15 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
       newState.fx.reverb.wet.value = fromPad.fx.reverb.wet.value;
       newState.fx.reverb.decay = fromPad.fx.reverb.decay;
 
-      newState.fx.chorus.wet.value = fromPad.fx.chorus.wet.value;
-      newState.fx.chorus.depth = fromPad.fx.chorus.depth;
+      newState.fx.feedbackDelay.wet.value = fromPad.fx.feedbackDelay.wet.value;
+      newState.fx.feedbackDelay.feedback.value =
+        fromPad.fx.feedbackDelay.feedback.value;
 
       fromPad.samplers.forEach((s) => {
-        const sampleMap = s["_buffers"]["_buffers"] as Map<number, ToneAudioBuffer>;
+        const sampleMap = s["_buffers"]["_buffers"] as Map<
+          number,
+          ToneAudioBuffer
+        >;
         const sampleMapNotes: SamplesMap = {};
 
         sampleMap.forEach((value) => {
@@ -236,7 +240,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
           .connect(newState.fx.bitCrusher)
           .connect(newState.fx.distortion)
           .connect(newState.fx.reverb)
-          .connect(newState.fx.chorus);
+          .connect(newState.fx.feedbackDelay);
 
         newSampler.volume.value = newState.baseVolume;
         newState.samplers.push(newSampler);
@@ -275,7 +279,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
           .connect(toPad.fx.bitCrusher)
           .connect(toPad.fx.distortion)
           .connect(toPad.fx.reverb)
-          .connect(toPad.fx.chorus);
+          .connect(toPad.fx.feedbackDelay);
         newSampler.volume.value = s.volume.value;
         newSamplers.push(newSampler);
       });
@@ -311,6 +315,9 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     }
 
     return set(({ samplers }) => {
+      if (!samplers) {
+        return;
+      }
       if (samplers[+padNumber]) {
         return {
           samplers: {
@@ -322,9 +329,13 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
           },
         };
       }
-      const fx = createFreshEffects()
+      const fx = createFreshEffects();
 
-      sampler.connect(fx.bitCrusher).connect(fx.distortion).connect(fx.reverb).connect(fx.chorus);
+      sampler
+        .connect(fx.bitCrusher)
+        .connect(fx.distortion)
+        .connect(fx.reverb)
+        .connect(fx.feedbackDelay);
 
       return {
         samplers: {
