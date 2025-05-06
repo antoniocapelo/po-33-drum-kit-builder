@@ -157,7 +157,42 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     for (let index = 0; index < keys.length; index++) {
       const element = keys[index];
       playPadSounds(samplers[+element]);
-      await timer(350);
+      const pad = samplers[+element];
+      let sampleDuration = 0;
+      const feedbackDelay = samplers[+element].fx.feedbackDelay;
+      pad.samplers.forEach((s) => {
+      const sampleMap = s["_buffers"]["_buffers"] as Map<
+        number,
+        ToneAudioBuffer
+      >;
+      // let's decide how much should we wait (200ms or more if the pad has the feedback delay active)
+      // can we get the actual sample duration (in ms) from the sample? keep in mind we might have multiple samplers per pad, so we should get the maximum value from any sampler present in the array
+
+      // let's update the logic below to use the sampleMap
+
+      // Calculate the maximum duration from the sampleMap
+      const dur =
+        Math.max(
+          ...Array.from(sampleMap.values()).map((buffer) => buffer.duration)
+        ) * 1000; // Convert to milliseconds
+        if (dur > sampleDuration) { 
+          sampleDuration = dur;
+        }
+        })
+      //const sampleDuration = samplers[+element].samplers[0].buffers[0].duration * 1000;
+
+      if (feedbackDelay.wet.value > 0) {
+        const delayTime = feedbackDelay.delayTime.value as number;
+        const feedback = feedbackDelay.feedback.value as number;
+
+        // Calculate the effective duration of the delay, considering feedback
+        const effectiveDelayDuration = delayTime * (1 / (1 - feedback));
+
+        // Wait for the calculated duration plus a small buffer
+        await timer(effectiveDelayDuration * 1000 + sampleDuration);
+      } else {
+        await timer(sampleDuration);
+      }
     }
     await timer(350);
   },
@@ -361,7 +396,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   setVolume: (padNumber, newValue) => {
     const pad = get().samplers[padNumber];
     const diff = pad.baseVolume - newValue;
-    console.log(diff);
     set(({ samplers }) => {
       return {
         samplers: {
@@ -380,7 +414,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   setPitch: (padNumber, newValue) => {
     const pad = get().samplers[padNumber];
     const diff = pad.baseNote - newValue;
-    console.log(diff);
     set(({ samplers }) => {
       return {
         samplers: {
@@ -398,7 +431,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     if (pad) {
       // @ts-ignore
       pad.fx[effect].wet.value = amount;
-      console.log(pad.fx[effect].wet.value);
       set(({ samplers }) => ({
         samplers: {
           ...samplers,
