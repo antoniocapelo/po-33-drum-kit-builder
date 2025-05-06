@@ -237,3 +237,10 @@ main button:hover {
   font-weight: 600;
   margin: 0 !important;
 }
+
+.effects {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-bottom: 16px;
+}
