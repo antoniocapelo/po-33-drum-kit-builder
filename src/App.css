@@ -112,6 +112,14 @@ body {
   grid-auto-flow: row;
 }
 
+.effects {
+  display: flex;
+  flex-direction: row;
+  gap: var(--pad-gap);
+  margin-bottom: 16px;
+}
+
+
 .play {
   position: relative;
   left: 2px;
@@ -186,6 +194,14 @@ main button:hover {
     grid-gap: var(--pad-gap-small);
   }
 
+  .effects {
+    gap: var(--pad-gap-small);
+  }
+
+  .abt {
+    margin-left: 4px;
+  }
+
   .row {
     -gap: var(--pad-gap-small);
   }
@@ -236,13 +252,6 @@ main button:hover {
   text-transform: uppercase !important;
   font-weight: 600;
   margin: 0 !important;
-}
-
-.effects {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  margin-bottom: 16px;
 }
 
 .abt {

@@ -33,7 +33,7 @@ export const EffectKnob = ({ effect, label, min, max }: EffectKnobProps) => {
               (effectNode as BitCrusher).bits.value = Math.round(intensity * 8) + 1; // Map to 1-8 bits
               break;
             case "distortion":
-              (effectNode as Distortion).distortion = intensity * 1; // Map to 0-1 distortion
+              (effectNode as Distortion).distortion = intensity * 1 + 0.1; // Map to 0-1 distortion
               break;
             case "reverb":
               (effectNode as Reverb).decay = intensity * 10; // Map to 0-10 seconds decay

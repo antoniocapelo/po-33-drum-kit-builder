@@ -59,6 +59,7 @@ const createFreshEffects = () => {
   bitCrusher.wet.value = 0; // Start turned off
 
   const distortion = new Distortion(0.4).toDestination();
+  distortion.oversample = "4x";
   distortion.wet.value = 0; // Start turned off
 
   const reverb = new Reverb({ decay: 2 }).toDestination();
