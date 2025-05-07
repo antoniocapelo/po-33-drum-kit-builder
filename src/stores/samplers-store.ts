@@ -416,7 +416,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
     });
   },
   setPitch: (padNumber, newValue) => {
-    const pad = get().samplers[padNumber];
     set(({ samplers }) => {
       return {
         samplers: {
