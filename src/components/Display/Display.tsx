@@ -109,7 +109,7 @@ export const Display = () => {
         <div className="info">
           <p>PO-33 drum kit builder</p>
           <p>
-            Add drum samples and, when you're ready, save them to a file or play
+            Add samples to pads and, when you're ready, save them to a file or play
             them into your PO-33.
           </p>
         </div>

@@ -124,9 +124,9 @@ function App() {
           {showAbout && <About onDismiss={() => setShowAbout(false)} />}
           <div className="effects">
             <EffectKnob effect="bitCrusher" label="BitC" min={0} max={100} />
-            <EffectKnob effect="distortion" label="Dist" min={0} max={100} />
-            <EffectKnob effect="reverb" label="Rev" min={0} max={100} />
-            <EffectKnob effect="feedbackDelay" label="Delay" min={0} max={100} />
+            <EffectKnob effect="distortion" label="Edge" min={0} max={100} />
+            <EffectKnob effect="reverb" label="Room" min={0} max={100} />
+            <EffectKnob effect="feedbackDelay" label="Dly" min={0} max={100} />
             <div className="sample">
               <button className="abt" onClick={() => setShowAbout(true)}>About</button>
             </div>

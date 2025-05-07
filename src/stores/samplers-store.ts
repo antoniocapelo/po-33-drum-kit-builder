@@ -43,7 +43,11 @@ interface SamplersState {
   saveAll: () => Promise<void>;
   setVolume: (pad: number, to: number) => void;
   setPitch: (pad: number, to: number) => void;
-  setFxAmount: (padNumber: number, effect: string, amount: number) => void;
+  setFxAmount: (
+    padNumber: number,
+    effect: "bitCrusher" | "distortion" | "reverb" | "feedbackDelay",
+    amount: number
+  ) => void;
   hasUploadedAtLeastOnce: boolean;
 }
 
@@ -161,24 +165,24 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
       let sampleDuration = 0;
       const feedbackDelay = samplers[+element].fx.feedbackDelay;
       pad.samplers.forEach((s) => {
-      const sampleMap = s["_buffers"]["_buffers"] as Map<
-        number,
-        ToneAudioBuffer
-      >;
-      // let's decide how much should we wait (200ms or more if the pad has the feedback delay active)
-      // can we get the actual sample duration (in ms) from the sample? keep in mind we might have multiple samplers per pad, so we should get the maximum value from any sampler present in the array
+        const sampleMap = s["_buffers"]["_buffers"] as Map<
+          number,
+          ToneAudioBuffer
+        >;
+        // let's decide how much should we wait (200ms or more if the pad has the feedback delay active)
+        // can we get the actual sample duration (in ms) from the sample? keep in mind we might have multiple samplers per pad, so we should get the maximum value from any sampler present in the array
 
-      // let's update the logic below to use the sampleMap
+        // let's update the logic below to use the sampleMap
 
-      // Calculate the maximum duration from the sampleMap
-      const dur =
-        Math.max(
-          ...Array.from(sampleMap.values()).map((buffer) => buffer.duration)
-        ) * 1000; // Convert to milliseconds
-        if (dur > sampleDuration) { 
+        // Calculate the maximum duration from the sampleMap
+        const dur =
+          Math.max(
+            ...Array.from(sampleMap.values()).map((buffer) => buffer.duration)
+          ) * 1000; // Convert to milliseconds
+        if (dur > sampleDuration) {
           sampleDuration = dur;
         }
-        })
+      });
       //const sampleDuration = samplers[+element].samplers[0].buffers[0].duration * 1000;
 
       if (feedbackDelay.wet.value > 0) {
@@ -351,7 +355,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
 
     return set(({ samplers }) => {
       if (!samplers) {
-        return;
+        return {};
       }
       if (samplers[+padNumber]) {
         return {
@@ -429,7 +433,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   setFxAmount: (padNumber, effect, amount) => {
     const pad = get().samplers[padNumber];
     if (pad) {
-      // @ts-ignore
       pad.fx[effect].wet.value = amount;
       set(({ samplers }) => ({
         samplers: {
