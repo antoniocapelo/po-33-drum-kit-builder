@@ -123,7 +123,7 @@ function App() {
           <Display />
           {showAbout && <About onDismiss={() => setShowAbout(false)} />}
           <div className="effects">
-            <EffectKnob effect="bitCrusher" label="BitC" min={0} max={100} />
+            <EffectKnob effect="bitCrusher" label="Crush" min={0} max={100} />
             <EffectKnob effect="distortion" label="Edge" min={0} max={100} />
             <EffectKnob effect="reverb" label="Room" min={0} max={100} />
             <EffectKnob effect="feedbackDelay" label="Dly" min={0} max={100} />

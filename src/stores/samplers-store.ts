@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createFFmpeg } from "@ffmpeg/ffmpeg";
 import { Frequency, Recorder, Sampler, ToneAudioBuffer } from "tone";
-import { BitCrusher, Distortion, Reverb, Chorus, FeedbackDelay } from "tone";
+import { BitCrusher, Distortion, Reverb, FeedbackDelay } from "tone";
 import { create } from "zustand";
 import { SamplesMap } from "../App";
 import { playPad as playPadSounds } from "../components/Sample/playPad";
@@ -417,7 +417,6 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   },
   setPitch: (padNumber, newValue) => {
     const pad = get().samplers[padNumber];
-    const diff = pad.baseNote - newValue;
     set(({ samplers }) => {
       return {
         samplers: {
