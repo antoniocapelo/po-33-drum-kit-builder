@@ -1,14 +1,13 @@
 import { DragEvent, useRef, useState } from "react";
 import useKeypress from "react-use-keypress";
-import { Context, Frequency, Sampler, ToneAudioBuffer } from "tone";
+import { Context, Player, ToneAudioBuffer } from "tone";
 
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useExperienceState } from "../../stores/experience-store";
 import {
-  DEFAULT_BASE_NOTE,
   DEFAULT_BASE_VOL,
   PadState,
-  useSamplerStore,
+  useSamplerStore
 } from "../../stores/samplers-store";
 import "./Sample.css";
 
@@ -87,15 +86,10 @@ export const Sample = ({ number }: { number: number }) => {
   const createSamplerFromFile = (
     audioBuffer: AudioBuffer | ToneAudioBuffer
   ) => {
-    const player = new Sampler(
-      {
-        [DEFAULT_BASE_NOTE]: audioBuffer,
-      },
+    const player = new Player(
+      audioBuffer,
       () => {
-        player.triggerAttack([
-          Frequency(DEFAULT_BASE_NOTE, "midi").toFrequency(),
-        ]);
-        setSampler(number, player);
+        player.start(0, 0, audioBuffer.duration); setSampler(number, player);
       }
     ).toDestination();
     player.volume.value = DEFAULT_BASE_VOL;
@@ -159,9 +153,9 @@ export const Sample = ({ number }: { number: number }) => {
       style={
         showFileDragStyle
           ? {
-              opacity: 0.5,
-              background: "#ddd",
-            }
+            opacity: 0.5,
+            background: "#ddd",
+          }
           : {}
       }
     >
@@ -172,7 +166,7 @@ export const Sample = ({ number }: { number: number }) => {
             ref={inputRef}
             type="file"
             onChange={handleFileSelected}
-            // value={file}
+          // value={file}
           />
         )}
         <div
@@ -181,11 +175,11 @@ export const Sample = ({ number }: { number: number }) => {
           style={
             transform
               ? {
-                  transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-                  position: "absolute",
-                  zIndex: "2",
-                  cursor: "move",
-                }
+                transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+                position: "absolute",
+                zIndex: "2",
+                cursor: "move",
+              }
               : { position: "static" }
           }
           {...listeners}

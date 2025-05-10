@@ -67,7 +67,7 @@ export const Display = () => {
         context?.clearRect(0, 0, width, height);
         currentPad.forEach((sample) => {
           // @ts-ignore
-          const buffer = sample._buffers.get(DEFAULT_BASE_NOTE); // Replace 'C4' with the key of the sample you want;
+          const buffer = sample.buffer
           const duration = buffer?.duration;
           if (buffer && duration) {
             drawBuffer.canvas(canvasRef.current, buffer, '#fc9c1f');
