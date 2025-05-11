@@ -58,6 +58,8 @@ interface SamplersState {
   ) => void;
   addPlayer: (padNumber: number, audioFile: string) => void;
   hasUploadedAtLeastOnce: boolean;
+  setStart: (padNumber: number, newStart: number) => void;
+  setEnd: (padNumber: number, newEnd: number) => void;
 }
 
 const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -169,9 +171,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
   playPad: (padNumber) => {
     const pad = get().samplers[padNumber];
     if (pad) {
-      pad.players.forEach((player) => {
-        player.start(); // Start playback
-      });
+      playPadSounds(pad);
     }
   },
   playAll: async () => {
@@ -442,5 +442,27 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
         },
       }));
     }
+  },
+  setStart: (padNumber, newStart) => {
+    set(({ samplers }) => ({
+      samplers: {
+        ...samplers,
+        [padNumber]: {
+          ...samplers[padNumber],
+          start: newStart,
+        },
+      },
+    }));
+  },
+  setEnd: (padNumber, newEnd) => {
+    set(({ samplers }) => ({
+      samplers: {
+        ...samplers,
+        [padNumber]: {
+          ...samplers[padNumber],
+          end: newEnd,
+        },
+      },
+    }));
   },
 }));

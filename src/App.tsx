@@ -33,6 +33,8 @@ import { initGA } from "./initiGA";
 import { useExperienceState } from "./stores/experience-store";
 import { useSamplerStore } from "./stores/samplers-store";
 import { EffectKnob } from "./components/EffectKnob/EffectKnob";
+import { StartKnob } from "./components/Knobs/StartKnob";
+import { EndKnob } from "./components/Knobs/EndKnob";
 
 export interface SamplesMap {
   [note: string]: ToneAudioBuffer | AudioBuffer | string;
@@ -41,6 +43,7 @@ export interface SamplesMap {
 
 function App() {
   const [showAbout, setShowAbout] = useState(false);
+  const [showEffects, setShowEffects] = useState(false);
   const copyPad = useSamplerStore((state) => state.copyPad);
   const removeSampler = useSamplerStore((state) => state.removeSampler);
   const playAll = useSamplerStore((state) => state.playAll);
@@ -123,14 +126,26 @@ function App() {
           <Display />
           {showAbout && <About onDismiss={() => setShowAbout(false)} />}
           <div className="effects">
-            <EffectKnob effect="bitCrusher" label="Crush" min={0} max={100} />
-            <EffectKnob effect="distortion" label="Edge" min={0} max={100} />
-            <EffectKnob effect="reverb" label="Room" min={0} max={100} />
-            <EffectKnob effect="feedbackDelay" label="Dly" min={0} max={100} />
+            {showEffects ? (
+              <>
+                <EffectKnob effect="bitCrusher" label="Crush" min={0} max={100} />
+                <EffectKnob effect="distortion" label="Edge" min={0} max={100} />
+                <EffectKnob effect="reverb" label="Room" min={0} max={100} />
+                <EffectKnob effect="feedbackDelay" label="Dly" min={0} max={100} />
+              </>
+            ) : (
+              <>
+                <VolumeKnob />
+                <PitchKnob />
+                <StartKnob />
+                <EndKnob />
+              </>
+            )}
             <div className="sample">
               <button className="abt" onClick={() => setShowAbout(true)}>About</button>
             </div>
           </div>
+
           <div className="row">
 
             <div className="pads">
@@ -139,8 +154,16 @@ function App() {
               ))}
             </div>
             <div className="func2">
-              <PitchKnob />
-              <VolumeKnob />
+              <div className="sample">
+                <button
+                  style={{ background: "#ddd" }}
+                  className="toggle-knobs"
+                  onClick={() => setShowEffects((prev) => !prev)}
+                >
+                  {showEffects ? "Sound" : "FX"}
+                </button>
+              </div>
+              <button disabled>TBD</button>
               <button
                 disabled={isBusy}
                 title="Save drum kit to file"
