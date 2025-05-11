@@ -2,7 +2,7 @@ import { useDndContext, useDroppable } from "@dnd-kit/core";
 import drawBuffer from 'draw-wave'
 import "./Display.css";
 import { useExperienceState } from "../../stores/experience-store";
-import { DEFAULT_BASE_NOTE, useSamplerStore } from "../../stores/samplers-store";
+import { useSamplerStore } from "../../stores/samplers-store";
 import { useEffect, useRef } from "react";
 
 export function mapValueToRange(
@@ -66,10 +66,10 @@ export const Display = () => {
         const height = canvasRef.current.height;
         context?.clearRect(0, 0, width, height);
         currentPad.forEach((sample) => {
-          // @ts-ignore
           const buffer = sample.buffer
           const duration = buffer?.duration;
           if (buffer && duration) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             drawBuffer.canvas(canvasRef.current, buffer, '#fc9c1f');
             context.beginPath();
             const trimStart = mapValueToRange(0, 0, duration, 0, width)
