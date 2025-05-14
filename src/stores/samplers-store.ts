@@ -40,7 +40,7 @@ export const DEFAULT_BASE_VOL = 0;
 
 interface SamplersState {
   samplers: Record<number, PadState>;
-  getSampleForPadNumber: (padNumber?: number) => Array<Player> | undefined;
+  getSampleForPadNumber: (padNumber?: number) => PadState | undefined;
   addSampler: (pad: number, sampler: Player) => void;
   copyPad: (from: number, to: number) => void;
   mergePads: (from: number, to: number) => void;
@@ -323,7 +323,7 @@ export const useSamplerStore = create<SamplersState>((set, get) => ({
 
     const pad = get().samplers[padNumber];
     if (pad) {
-      return pad.players;
+      return pad;
     }
     return undefined;
   },

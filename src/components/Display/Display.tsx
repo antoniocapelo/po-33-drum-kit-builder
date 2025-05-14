@@ -65,15 +65,25 @@ export const Display = () => {
         const width = canvasRef.current.width;
         const height = canvasRef.current.height;
         context?.clearRect(0, 0, width, height);
-        currentPad.forEach((sample) => {
+        const players = currentPad.players;
+        const playerWithBiggestDuration = players.reduce((prev, curr) => {
+          if (prev.buffer.duration > curr.buffer.duration) {
+            return prev;
+          } else {
+            return curr;
+          }
+        });
+
+        const buffDuration = playerWithBiggestDuration.buffer.duration;
+        currentPad.players.forEach((sample) => {
           const buffer = sample.buffer
           const duration = buffer?.duration;
           if (buffer && duration) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             drawBuffer.canvas(canvasRef.current, buffer, '#fc9c1f');
             context.beginPath();
-            const trimStart = mapValueToRange(0, 0, duration, 0, width)
-            const trimEnd = mapValueToRange(duration, 0, duration, 0, width)
+            const trimStart = mapValueToRange(currentPad.start * buffDuration, 0, duration, 0, width)
+            const trimEnd = mapValueToRange(currentPad.end * buffDuration, 0, duration, 0, width)
             context.strokeStyle = '#FFFFFF';
             // Start
             context.moveTo(trimStart, 0);

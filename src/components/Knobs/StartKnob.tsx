@@ -16,7 +16,7 @@ export const StartKnob = () => {
             value={startValue * 100} // Convert to percentage for UI
             onChange={(e) => {
                 if (currentPad) {
-                    if (e.value < endValue * 100) {
+                    if (e.value > endValue * 100) {
                         setStart(currentPad, endValue);
                         return;
                     }
