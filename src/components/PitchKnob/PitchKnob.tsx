@@ -4,30 +4,46 @@ import {
   DEFAULT_BASE_NOTE,
   useSamplerStore,
 } from "../../stores/samplers-store";
+import { mapValueToRange } from "../Display/Display";
+
+const MAX_PITCH = 2;
+const MIN_PITCH = 0.05;
+
+const MAX_UI = 50;
+const MIN_UI = 0;
 
 export const PitchKnob = () => {
   const currentPad = useExperienceState().currentPad;
   const setPitch = useSamplerStore().setPitch;
   const currentPadState = useSamplerStore().samplers[currentPad as number];
-  const val = currentPadState
-    ? currentPadState.baseNote - DEFAULT_BASE_NOTE
-    : 0;
 
+  const val: number = currentPadState
+    ? mapValueToRange(
+      currentPadState.baseNote,
+      MIN_PITCH,
+      MAX_PITCH,
+      MIN_UI,
+      MAX_UI
+    )
+    : 1;
   return (
     <Knob
       value={val}
       onChange={(e) => {
         if (currentPad) {
-          const newValue = DEFAULT_BASE_NOTE + e.value;
-          setPitch(currentPad, newValue);
+          const value = mapValueToRange(e.value, MIN_UI, MAX_UI, MIN_PITCH, MAX_PITCH)
+          setPitch(
+            currentPad,
+            value
+          );
         }
       }}
       size={54}
       valueColor="#444"
       rangeColor="#f9f9f9"
       valueTemplate={"Pitch"}
-      min={-12}
-      max={12}
+      min={MIN_UI}
+      max={MAX_UI}
     />
   );
 };

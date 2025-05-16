@@ -85,6 +85,7 @@ export const Display = () => {
             const trimStart = mapValueToRange(currentPad.start * buffDuration, 0, duration, 0, width)
             const trimEnd = mapValueToRange(currentPad.end * buffDuration, 0, duration, 0, width)
             context.strokeStyle = '#FFFFFF';
+            console.log('trimStart', trimStart, currentPad.start, buffDuration, currentPad.end)
             // Start
             context.moveTo(trimStart, 0);
             context.lineTo(trimStart, height);

@@ -35,7 +35,7 @@ export interface PadState {
   };
 }
 
-export const DEFAULT_BASE_NOTE = 60;
+export const DEFAULT_BASE_NOTE = 1;
 export const DEFAULT_BASE_VOL = 0;
 
 interface SamplersState {
@@ -108,7 +108,7 @@ initialSamples.forEach((sample, idx) => {
     baseVolume: DEFAULT_BASE_VOL,
     players: [player], // Replace `samplers` with `players`,
     start: 0,
-    end: player.buffer.duration,
+    end: 1,
     fx: {
       bitCrusher,
       distortion,

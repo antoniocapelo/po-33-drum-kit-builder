@@ -30,6 +30,9 @@ export const playPad = (padState: PadState, start = 0) => {
     // Ensure start is within the buffer duration
     const duration = (padState.end || 1) * bufferDuration - offset;
 
+    console.log('base note', padState.baseNote);
+
+    player.playbackRate = padState.baseNote;
     player.start(start, offset, duration);
   });
 };
