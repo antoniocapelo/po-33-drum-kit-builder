@@ -25,7 +25,7 @@ export const PitchKnob = () => {
       MIN_UI,
       MAX_UI
     )
-    : 1;
+    : DEFAULT_BASE_NOTE;
   return (
     <Knob
       value={val}
